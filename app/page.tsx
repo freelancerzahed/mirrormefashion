@@ -19,10 +19,15 @@ import {
   Globe,
   Shield,
   Rocket,
+  Play,
+  ChevronDown,
   Heart,
   ShoppingBag,
   Camera,
   Palette,
+  Home,
+  MessageCircle,
+  Menu,
   Brain,
   Target,
   Lightbulb,
@@ -33,9 +38,94 @@ import RegistrationForm from "@/components/registration-form"
 import { products } from "@/data/products"
 import { CustomHorizontalScrollbar } from "@/components/custom-horizontal-scrollbar"
 import BodyViewer from "@/components/body-viewer"
-import MobileBottomNav from "@/components/sections/mobile-bottom-nav"
-import MobileHeroSection from "@/components/sections/mobile-hero-section"
-import MobileBetaSection from "@/components/sections/mobile-beta-section"
+
+// Mobile Bottom Navigation Component
+function MobileBottomNav({
+  currentSection,
+  onSectionChange,
+}: { currentSection: string; onSectionChange: (section: string) => void }) {
+  const navItems = [
+    {
+      id: "hero",
+      name: "Home",
+      icon: Home,
+      action: () => onSectionChange("hero"),
+    },
+    {
+      id: "features",
+      name: "Features",
+      icon: Sparkles,
+      action: () => onSectionChange("features"),
+    },
+    {
+      id: "chat",
+      name: "AI Stylist",
+      icon: MessageCircle,
+      action: () => onSectionChange("chat"),
+    },
+    {
+      id: "shop",
+      name: "Shop",
+      icon: ShoppingBag,
+      action: () => window.open("/shop", "_blank"),
+    },
+    {
+      id: "menu",
+      name: "Menu",
+      icon: Menu,
+      action: () => onSectionChange("beta"),
+    },
+  ]
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-gray-200/50 shadow-2xl md:hidden">
+      <div className="safe-area-inset-bottom">
+        <div className="grid grid-cols-5 py-0">
+          {navItems.map((item) => {
+            const isActive =
+              currentSection === item.id ||
+              (item.id === "hero" && currentSection === "hero") ||
+              (item.id === "features" && currentSection === "features") ||
+              (item.id === "chat" &&
+                (currentSection === "chat" || currentSection === "bodyModeler" || currentSection === "registration")) ||
+              (item.id === "menu" &&
+                (currentSection === "beta" ||
+                  currentSection === "professional" ||
+                  currentSection === "retailer" ||
+                  currentSection === "advertiser"))
+
+            return (
+              <button
+                key={item.id}
+                onClick={item.action}
+                className={`flex flex-col items-center justify-center py-2 px-1 relative transition-all duration-300 ${
+                  isActive ? "text-primary-600 scale-110" : "text-gray-500 hover:text-primary-500 active:scale-95"
+                }`}
+              >
+                <div className={`relative transition-all duration-300 ${isActive ? "transform -translate-y-1" : ""}`}>
+                  <item.icon className={`h-6 w-6 transition-all duration-300 ${isActive ? "scale-110" : ""}`} />
+                  {isActive && (
+                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary-600 rounded-full animate-pulse"></div>
+                  )}
+                </div>
+                <span
+                  className={`text-xs mt-1 font-medium transition-all duration-300 ${
+                    isActive ? "text-primary-600 font-semibold" : "text-gray-500"
+                  }`}
+                >
+                  {item.name}
+                </span>
+                {isActive && (
+                  <div className="absolute inset-0 bg-primary-50 rounded-2xl -z-10 scale-75 opacity-50"></div>
+                )}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function HomePage() {
   const [currentSection, setCurrentSection] = useState("hero")
@@ -237,10 +327,124 @@ export default function HomePage() {
           <>
             {/* Mobile sections with vertical scroll */}
             <div className="h-full overflow-y-auto pb-0.5 pt-1">
-              <MobileHeroSection onSectionChange={handleSectionChange} />
+              {/* Modern Hero Section - Mobile */}
+              <section
+                id="heroSection"
+                className="min-h-screen relative overflow-hidden bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700"
+              >
+                {/* Animated Background Elements */}
+                <div className="absolute inset-0 overflow-hidden">
+                  {/* Floating Orbs */}
+                  <div className="absolute top-20 right-8 w-32 h-32 bg-gradient-to-br from-primary-400/30 to-primary-300/20 rounded-full blur-2xl animate-pulse"></div>
+                  <div className="absolute top-40 left-6 w-24 h-24 bg-gradient-to-br from-yellow-400/20 to-orange-400/10 rounded-full blur-xl animate-pulse delay-1000"></div>
+                  <div className="absolute bottom-32 right-12 w-40 h-40 bg-gradient-to-br from-primary-500/20 to-primary-600/10 rounded-full blur-3xl animate-pulse delay-500"></div>
 
-              {/* Features Section - Mobile */}
-              <section id="featuresSection" className="min-h-screen relative overflow-hidden bg-white">
+                  {/* Geometric Shapes */}
+                  <div className="absolute top-1/3 left-4 w-16 h-16 border-2 border-primary-300/30 rounded-3xl rotate-45 animate-spin-slow"></div>
+                  <div className="absolute bottom-1/4 left-8 w-12 h-12 bg-gradient-to-br from-primary-400/20 to-primary-500/10 rounded-2xl rotate-12 animate-bounce-slow"></div>
+
+                  {/* Grid Pattern */}
+                  <div className="absolute inset-0 opacity-5">
+                    <div className="grid grid-cols-8 gap-4 h-full">
+                      {Array.from({ length: 64 }).map((_, i) => (
+                        <div key={i} className="border border-white/10 rounded-lg"></div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-6 safe-area-inset-top">
+                  <div className="text-center text-white max-w-xs w-full">
+                    {/* Status Badge */}
+                    <div className="inline-flex items-center px-3 py-2 bg-white/10 backdrop-blur-xl rounded-full border border-white/20 mb-6 shadow-lg animate-fade-in">
+                      <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                      <span className="text-xs font-semibold tracking-wide">AI-Powered • Live Beta</span>
+                    </div>
+
+                    {/* Main Heading */}
+                    <div className="mb-8 animate-slide-up">
+                      <h1 className="text-3xl font-black mb-4 leading-tight tracking-tight">
+                        Meet Your
+                        <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-pink-300 to-purple-300 animate-gradient-x">
+                          AI Fashion
+                        </span>
+                        <span className="block">Stylist</span>
+                      </h1>
+                      <p className="text-base mb-3 font-light text-gray-100 leading-relaxed">
+                        Discover fashion that fits your unique style
+                      </p>
+                      <p className="text-sm text-primary-200 opacity-90 font-medium">
+                        Powered by advanced AI technology
+                      </p>
+                    </div>
+
+                    {/* Interactive Stats Grid */}
+                    <div className="grid grid-cols-3 gap-3 mb-8">
+                      <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-3 border border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg group">
+                        <div className="flex items-center justify-center mb-2">
+                          <Star className="w-5 h-5 text-yellow-400 mr-1 group-hover:rotate-12 transition-transform" />
+                          <span className="font-black text-lg">4.9</span>
+                        </div>
+                        <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider">Rating</p>
+                      </div>
+
+                      <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-3 border border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg group">
+                        <div className="flex items-center justify-center mb-2">
+                          <Users className="w-5 h-5 text-primary-300 mr-1 group-hover:scale-110 transition-transform" />
+                          <span className="font-black text-lg">50K+</span>
+                        </div>
+                        <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider">Users</p>
+                      </div>
+
+                      <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-3 border border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg group">
+                        <div className="flex items-center justify-center mb-2">
+                          <Zap className="w-5 h-5 text-green-400 mr-1 group-hover:rotate-12 transition-transform" />
+                          <span className="font-black text-lg">AI</span>
+                        </div>
+                        <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider">Powered</p>
+                      </div>
+                    </div>
+
+                    {/* CTA Buttons */}
+                    <div className="space-y-4 mb-8">
+                      <Button
+                        size="lg"
+                        className="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white py-3 text-lg font-bold rounded-2xl shadow-2xl transform hover:scale-105 active:scale-95 transition-all duration-300 group border-0 relative overflow-hidden"
+                        onClick={() => handleSectionChange("features")}
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                        <Play className="mr-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        Start Your Journey
+                      </Button>
+
+                      <Button
+                        size="lg"
+                        variant="outline"
+                        className="w-full border-2 border-white/30 text-white hover:bg-white hover:text-primary-600 py-3 text-lg font-bold rounded-2xl bg-white/10 backdrop-blur-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg group relative overflow-hidden"
+                        onClick={() => handleSectionChange("features")}
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                        <Sparkles className="mr-2 w-5 h-5 group-hover:rotate-12 transition-transform" />
+                        Explore Features
+                      </Button>
+                    </div>
+
+                    {/* Scroll Indicator */}
+                    <div className="animate-bounce opacity-70">
+                      <div className="flex flex-col items-center">
+                        <p className="text-sm text-white/80 mb-2 font-medium">Swipe up to explore</p>
+                        <ChevronDown className="w-5 h-5 text-white/60" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Modern How It Works Section - Mobile */}
+              <section
+                id="featuresSection"
+                className="min-h-screen py-8 px-4 bg-gradient-to-br from-gray-50 via-white to-gray-50 relative overflow-hidden"
+              >
                 {/* Background Elements */}
                 <div className="absolute inset-0 overflow-hidden">
                   <div className="absolute top-20 left-10 w-80 h-80 bg-gradient-to-br from-primary-100/60 to-primary-200/40 rounded-full blur-3xl"></div>
@@ -357,7 +561,117 @@ export default function HomePage() {
                 </div>
               </section>
 
-              <MobileBetaSection onSectionChange={handleSectionChange} />
+              {/* Native App Beta Section */}
+              <section id="betaSection" className="min-h-screen relative overflow-hidden">
+                <div className="absolute inset-0">
+                  <Image
+                    src="/placeholder.svg?height=1080&width=1920"
+                    alt="Fashion professionals"
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary-900/85 via-primary-800/75 to-primary-900/85"></div>
+                </div>
+
+                <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-12 safe-area-inset-top">
+                  <div className="max-w-sm mx-auto text-white text-center w-full">
+                    {/* Native Beta Badge */}
+                    <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-xl rounded-full border border-yellow-400/30 mb-6 shadow-lg">
+                      <div className="w-2 h-2 bg-yellow-400 rounded-full mr-2 animate-pulse"></div>
+                      <span className="text-sm font-semibold">Beta Launch Special</span>
+                    </div>
+
+                    <h1 className="text-2xl font-bold mb-4 leading-tight tracking-tight">
+                      <span className="text-yellow-300 underline decoration-wavy decoration-2">Free</span> styling for{" "}
+                      <span className="text-yellow-300 underline decoration-wavy decoration-2">everyone</span>
+                    </h1>
+                    <p className="text-lg mb-6 font-light text-gray-200">Welcome to Mirror Me Fashion Beta!</p>
+
+                    {/* Native Feature List */}
+                    <div className="space-y-3 mb-6">
+                      <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-3 border border-white/20 hover:bg-white/20 transition-all duration-300 shadow-lg">
+                        <div className="flex items-start">
+                          <CheckCircle className="text-green-400 mr-3 w-4 h-4 flex-shrink-0 mt-1" />
+                          <p className="text-sm text-left">
+                            Get <span className="font-bold text-yellow-300">Free & Instant</span> fashion advice from
+                            the World's <span className="font-bold text-yellow-300">First AI Stylist</span>
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-3 border border-white/20 hover:bg-white/20 transition-all duration-300 shadow-lg">
+                        <div className="flex items-start">
+                          <CheckCircle className="text-green-400 mr-3 w-4 h-4 flex-shrink-0 mt-1" />
+                          <p className="text-sm text-left">
+                            Shop from global retailers with personalized recommendations
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-3 border border-white/20 hover:bg-white/20 transition-all duration-300 shadow-lg">
+                        <div className="flex items-start">
+                          <CheckCircle className="text-green-400 mr-3 w-4 h-4 flex-shrink-0 mt-1" />
+                          <p className="text-sm text-left">Join as a Fashion Professional to expand your business</p>
+                        </div>
+                      </div>
+
+                      <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-3 border border-white/20 hover:bg-white/20 transition-all duration-300 shadow-lg">
+                        <div className="flex items-start">
+                          <CheckCircle className="text-green-400 mr-3 w-4 h-4 flex-shrink-0 mt-1" />
+                          <p className="text-sm text-left">Grow followers & monetize your brand with AI insights</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Native Action Buttons */}
+                    <div className="space-y-3 mb-6">
+                      <Button
+                        size="lg"
+                        className="w-full bg-white text-primary-600 hover:bg-gray-100 py-3 text-base font-semibold rounded-2xl shadow-2xl transform hover:scale-105 active:scale-95 transition-all duration-300 group border-0"
+                        onClick={() => handleSectionChange("chat")}
+                      >
+                        <Heart className="mr-2 w-4 h-4 group-hover:scale-110 transition-transform" />
+                        I'm a Shopper
+                      </Button>
+
+                      <Button
+                        size="lg"
+                        variant="outline"
+                        className="w-full border-2 border-white/30 text-white hover:bg-white hover:text-primary-600 py-3 text-base font-semibold rounded-2xl bg-white/10 backdrop-blur-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg"
+                        onClick={() => {
+                          setCurrentSection("professional")
+                          setTimeout(() => scrollToSection("professionalSection"), 500)
+                        }}
+                      >
+                        <Award className="mr-2 w-4 h-4 group-hover:rotate-12 transition-transform" />
+                        I'm a Professional
+                      </Button>
+                    </div>
+
+                    {/* Mobile Stats */}
+                    <div className="grid grid-cols-3 gap-2">
+                      <div className="bg-white/10 backdrop-blur-xl rounded-xl p-3 border border-white/20 hover:bg-white/20 transition-all duration-300 group shadow-lg">
+                        <div className="text-lg font-black text-yellow-400 mb-1 group-hover:scale-110 transition-transform">
+                          50K+
+                        </div>
+                        <div className="text-xs font-semibold text-gray-200 uppercase tracking-wider">Users</div>
+                      </div>
+                      <div className="bg-white/10 backdrop-blur-xl rounded-xl p-3 border border-white/20 hover:bg-white/20 transition-all duration-300 group shadow-lg">
+                        <div className="text-lg font-black text-primary-300 mb-1 group-hover:scale-110 transition-transform">
+                          4.9★
+                        </div>
+                        <div className="text-xs font-semibold text-gray-200 uppercase tracking-wider">Rating</div>
+                      </div>
+                      <div className="bg-white/10 backdrop-blur-xl rounded-xl p-3 border border-white/20 hover:bg-white/20 transition-all duration-300 group shadow-lg">
+                        <div className="text-lg font-black text-green-400 mb-1 group-hover:scale-110 transition-transform">
+                          AI
+                        </div>
+                        <div className="text-xs font-semibold text-gray-200 uppercase tracking-wider">Powered</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
 
               {/* Professional Section */}
               {currentSection === "professional" && (
