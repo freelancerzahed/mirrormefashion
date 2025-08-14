@@ -573,7 +573,7 @@ export default function HomePage() {
                   <div className="absolute inset-0 bg-gradient-to-br from-primary-900/85 via-primary-800/75 to-primary-900/85"></div>
                 </div>
 
-                <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-12 safe-area-inset-top">
+                <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-12 pb-24 safe-area-inset-top">
                   <div className="max-w-sm mx-auto text-white text-center w-full">
                     {/* Native Beta Badge */}
                     <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-xl rounded-full border border-yellow-400/30 mb-6 shadow-lg">
@@ -1035,7 +1035,7 @@ export default function HomePage() {
                     <div className="absolute bottom-0 left-0 w-80 h-80 bg-primary-200 rounded-full blur-3xl opacity-25 -translate-x-32 translate-y-32 animate-pulse"></div>
                   </div>
 
-                  <div className="relative z-10 min-h-screen flex items-center justify-center safe-area-inset-top py-1 px-2">
+                  <div className="relative z-10 min-h-screen flex items-center justify-center safe-area-inset-top py-1 px-2 pb-24">
                     <div className="max-w-md w-full mx-auto">
                       {/* Header */}
                       <div className="text-center mb-6">

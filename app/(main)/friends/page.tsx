@@ -10,6 +10,8 @@ import { Search, UserPlus, UserMinus, Check, X, Users, UserX } from "lucide-reac
 import Link from "next/link"
 import { Skeleton } from "@/components/ui/skeleton"
 import FriendSuggestions from "@/components/friend-suggestions" // Import FriendSuggestions
+import { Swiper, SwiperSlide } from "swiper/react"
+import "swiper/css"
 
 interface Friend {
   id: string
@@ -128,6 +130,14 @@ export default function FriendsPage() {
     return friends.filter((f) => f.status === status).length
   }
 
+  const tabs = [
+    { value: "all", label: "All", count: getTabCount("all") },
+    { value: "friends", label: "Friends", count: getTabCount("friends") },
+    { value: "pending", label: "Pending", count: getTabCount("pending") },
+    { value: "sent", label: "Sent", count: getTabCount("sent") },
+    { value: "suggestions", label: "Suggestions", count: getTabCount("suggestions") },
+  ]
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-50">
       <div className="max-w-5xl mx-auto space-y-6 p-4 md:p-6 pb-24 md:pb-6">
@@ -151,7 +161,7 @@ export default function FriendsPage() {
         </div>
 
         <Tabs defaultValue="all" onValueChange={(value) => setActiveTab(value as any)}>
-          <TabsList className="grid w-full grid-cols-5 bg-white shadow-sm border border-primary-100">
+          <TabsList className="hidden md:grid w-full grid-cols-5 bg-white shadow-sm border border-primary-100">
             <TabsTrigger
               value="all"
               className="data-[state=active]:bg-primary-600 data-[state=active]:text-white text-primary-600 hover:bg-primary-50"
@@ -184,6 +194,34 @@ export default function FriendsPage() {
             </TabsTrigger>
           </TabsList>
 
+          <div className="md:hidden bg-white shadow-sm border border-primary-100 rounded-lg p-2">
+            <Swiper spaceBetween={8} slidesPerView="auto" freeMode={true} className="w-full">
+              {tabs.map((tab) => (
+                <SwiperSlide key={tab.value} className="!w-auto">
+                  <button
+                    onClick={() => setActiveTab(tab.value as any)}
+                    className={`px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-all duration-200 ${
+                      activeTab === tab.value
+                        ? "bg-primary-600 text-white shadow-sm"
+                        : "text-primary-600 hover:bg-primary-50"
+                    }`}
+                  >
+                    {tab.label}
+                    {tab.count > 0 && (
+                      <span
+                        className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
+                          activeTab === tab.value ? "bg-white/20 text-white" : "bg-primary-100 text-primary-600"
+                        }`}
+                      >
+                        {tab.count}
+                      </span>
+                    )}
+                  </button>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+
           <TabsContent value={activeTab} className="space-y-4 mt-6">
             {loading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -215,8 +253,7 @@ export default function FriendsPage() {
                     key={friend.id}
                     className="border-primary-100 hover:shadow-lg transition-all duration-200 hover:border-primary-200 bg-white"
                     style={{
-                      animationDelay: `${index * 100}ms`,
-                      animation: "fadeInUp 0.5s ease-out forwards",
+                      animation: `fadeInUp 0.5s ease-out ${index * 100}ms forwards`,
                     }}
                   >
                     <CardContent className="p-4 flex items-center space-x-4">

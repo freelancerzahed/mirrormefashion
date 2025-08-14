@@ -668,12 +668,8 @@ export default function BodyViewer({ userResponses, onComplete }: BodyViewerProp
         {/* Controls container */}
         <div className="flex-1 flex flex-col bg-white border-t border-gray-200 overflow-hidden">
           {/* Compact Header */}
-          <div className="p-3 bg-white border-b border-gray-200 flex-shrink-0">
+          <div className="bg-white border-b border-gray-200 flex-shrink-0">
             <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-base font-semibold text-gray-900">Body Customization</h2>
-                <p className="text-xs text-gray-500">Fine-tune measurements below</p>
-              </div>
               <div className="flex gap-2">
                 <Button
                   variant="ghost"
@@ -765,18 +761,22 @@ export default function BodyViewer({ userResponses, onComplete }: BodyViewerProp
           </div>
 
           {/* Fixed Bottom Actions - Always visible */}
-          <div className="fixed bottom-0 left-0 right-0 p-3 bg-white border-t border-gray-200 flex-shrink-0 z-50">
+          <div className="sticky bottom-0 left-0 right-0 p-3 bg-white border-t border-gray-200 flex-shrink-0 shadow-lg z-50 mb-16">
             <div className="grid grid-cols-2 gap-2">
-              <Button variant="outline" onClick={resetToAI} className="h-11 text-sm bg-transparent">
+              <Button
+                variant="outline"
+                onClick={resetToAI}
+                className="flex-1 h-12 bg-transparent border-red-200 text-red-600 hover:bg-red-50"
+              >
                 <RotateCcw className="w-4 h-4 mr-2" />
-                Reset
+                Body Rear
               </Button>
               <Button
                 onClick={onComplete}
-                className="h-11 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-sm"
+                className="flex-1 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 h-12 text-white font-medium"
               >
+                <ArrowRight className="w-4 h-4 mr-2" />
                 Continue
-                <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
           </div>
@@ -1103,7 +1103,7 @@ export default function BodyViewer({ userResponses, onComplete }: BodyViewerProp
                 className="flex-1 h-12 bg-transparent border-red-200 text-red-600 hover:bg-red-50"
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
-                Reset
+                Body Rear
               </Button>
               <Button
                 onClick={onComplete}
@@ -1173,8 +1173,6 @@ export default function BodyViewer({ userResponses, onComplete }: BodyViewerProp
           </div>
         </div>
       </div>
-
-    
     </div>
   )
 }

@@ -9,6 +9,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Bell, MessageSquare, Heart, UserPlus, ShoppingBag, Info } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 import { cn } from "@/lib/utils"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { FreeMode } from "swiper/modules"
+import "swiper/css"
+import "swiper/css/free-mode"
 
 type NotificationType = "all" | "mentions" | "likes" | "comments" | "follows" | "orders" | "system"
 
@@ -106,6 +110,15 @@ const mockNotifications: Notification[] = [
   },
 ]
 
+const tabs = [
+  { id: "all", label: "All", icon: Bell },
+  { id: "likes", label: "Likes", icon: Heart },
+  { id: "comments", label: "Comments", icon: MessageSquare },
+  { id: "follows", label: "Follows", icon: UserPlus },
+  { id: "orders", label: "Orders", icon: ShoppingBag },
+  { id: "system", label: "System", icon: Info },
+]
+
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [activeTab, setActiveTab] = useState<NotificationType>("all")
@@ -160,7 +173,31 @@ export default function NotificationsPage() {
         </div>
 
         <Tabs defaultValue="all" onValueChange={(value) => setActiveTab(value as NotificationType)}>
-          <TabsList className="grid w-full grid-cols-6 bg-white shadow-sm border border-primary-100">
+          <div className="md:hidden w-full overflow-hidden">
+            <Swiper modules={[FreeMode]} spaceBetween={8} slidesPerView="auto" freeMode={true} className="px-2">
+              {tabs.map((tab) => {
+                const IconComponent = tab.icon
+                return (
+                  <SwiperSlide key={tab.id} className="!w-auto">
+                    <button
+                      onClick={() => setActiveTab(tab.id as NotificationType)}
+                      className={cn(
+                        "flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 whitespace-nowrap",
+                        activeTab === tab.id
+                          ? "bg-primary-600 text-white shadow-md"
+                          : "bg-white text-primary-600 hover:bg-primary-50 border border-primary-100",
+                      )}
+                    >
+                      <IconComponent className="w-4 h-4" />
+                      <span className="text-sm font-medium">{tab.label}</span>
+                    </button>
+                  </SwiperSlide>
+                )
+              })}
+            </Swiper>
+          </div>
+
+          <TabsList className="hidden md:grid w-full grid-cols-6 bg-white shadow-sm border border-primary-100">
             <TabsTrigger
               value="all"
               className="data-[state=active]:bg-primary-600 data-[state=active]:text-white text-primary-600 hover:bg-primary-50"
