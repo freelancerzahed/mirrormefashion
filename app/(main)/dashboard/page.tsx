@@ -112,33 +112,7 @@ export default function DashboardPage() {
     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 md:gap-6 p-2 md:p-0 pb-24 md:pb-6">
       {/* Main Content Area */}
       <div className="md:col-span-2 lg:col-span-2 space-y-4 md:space-y-6">
-        {/* Mobile Quick Actions */}
-        <div className="md:hidden">
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-            <Button className="flex-shrink-0 bg-gradient-to-r from-primary-600 to-primary-700 hover:bg-primary-700 text-white rounded-full px-6 py-2 active:scale-95 transition-all shadow-lg">
-              <Plus className="h-4 w-4 mr-2" />
-              Create Post
-            </Button>
-            <Button
-              variant="outline"
-              className="flex-shrink-0 rounded-full px-6 py-2 active:scale-95 transition-all border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white bg-transparent"
-            >
-              Stories
-            </Button>
-            <Button
-              variant="outline"
-              className="flex-shrink-0 rounded-full px-6 py-2 active:scale-95 transition-all border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white bg-transparent"
-            >
-              Live
-            </Button>
-            <Button
-              variant="outline"
-              className="flex-shrink-0 rounded-full px-6 py-2 active:scale-95 transition-all border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white bg-transparent"
-            >
-              Events
-            </Button>
-          </div>
-        </div>
+      
 
         {/* Create Post Section */}
         <div className="md:block">
@@ -193,7 +167,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Mobile Bottom Sheet for Quick Access */}
-      <div className="md:hidden fixed bottom-16 right-4 z-30">
+      <div className="md:hidden fixed  bottom-[90px] right-4 z-99">
         <Sheet>
           <SheetTrigger asChild>
             <Button
