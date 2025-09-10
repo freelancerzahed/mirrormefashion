@@ -3,7 +3,7 @@ import BodyViewer from "@/components/body-viewer"
 interface BodyModelerSectionProps {
   isMobile: boolean
   userResponses: any
-  handleBodyModelerComplete: () => void
+  handleBodyModelerComplete: (bodyData: any) => void  // ✅ now expects bodyData
 }
 
 export default function BodyModelerSection({

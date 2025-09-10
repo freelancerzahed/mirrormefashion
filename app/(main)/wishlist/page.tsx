@@ -30,7 +30,7 @@ export default function WishlistPage() {
           <h2 className="text-2xl font-semibold text-gray-900 mb-2">Your wishlist is empty</h2>
           <p className="text-gray-600 mb-6">Save items you love to your wishlist!</p>
           <Link href="/shop">
-            <Button className="bg-primary-600 hover:bg-primary-700">Continue Shopping</Button>
+            <Button className="bg-primary-600 hover:bg-primary-700 text-white">Continue Shopping</Button>
           </Link>
         </div>
       </div>

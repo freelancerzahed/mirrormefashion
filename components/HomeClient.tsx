@@ -16,6 +16,7 @@ import AdvertiserSection from "@/components/advertiser-section";
 import ChatSection from "@/components/chat-section";
 import BodyModelerSection from "@/components/body-modeler-section";
 import RegistrationSection from "@/components/registration-section";
+import { BACKEND_URL } from "@/config";
 
 type Props = {
   products: any[];
@@ -257,16 +258,66 @@ export default function HomeClient({ products }: Props) {
     setCurrentSection("chat");
   };
 
-  const handleBodyModelerComplete = () => {
-    dispatch({ type: "setShowRegistration", payload: true });
-    setCurrentSection("registration");
-    setTimeout(() => scrollToSection("registrationSection"), 500);
-  };
 
-  const handleRegistrationSubmit = (formData: any) => {
-    console.log("Registration submitted:", formData);
-    alert("Welcome to Mirror Me Fashion! Your account has been created successfully! 🎉");
-  };
+
+
+
+// when body modeler completes
+const handleBodyModelerComplete = (bodyData: any) => {
+  dispatch({
+    type: "setUserResponses",
+    payload: { ...state.userResponses, ...bodyData }, // ✅ merge chatbot + body modeler data
+  });
+  dispatch({ type: "setShowRegistration", payload: true });
+  setCurrentSection("registration");
+  setTimeout(() => scrollToSection("registrationSection"), 500);
+};
+
+const handleRegistrationSubmit = async (formData: any) => {
+  console.log("Registration submitted:", formData);
+
+  try {
+    const response = await fetch(`${BACKEND_URL}/auth/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(formData),
+      credentials: "include", // include cookies if backend uses sessions
+    });
+
+    let data: any = null;
+    const contentType = response.headers.get("content-type") || "";
+
+    // Check if response is JSON
+    if (contentType.includes("application/json")) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      console.warn("Backend returned non-JSON response:", text);
+      data = { status: false, message: text || "No response from server" };
+    }
+
+    if (response.ok && data.status) {
+      alert("🎉 Welcome to Mirror Me Fashion! Your account has been created successfully!");
+      console.log("Registered user:", data.user);
+
+      // Save token to local storage
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      }
+    } else {
+      alert("⚠️ Registration failed: " + (data.message || JSON.stringify(data.errors)));
+      console.error("Registration errors:", data.errors || data.message);
+    }
+  } catch (error) {
+    console.error("Registration error:", error);
+    alert("Something went wrong. Please try again later.");
+  }
+};
+
+
 
   return (
     <div className="overflow-hidden h-screen">

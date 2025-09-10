@@ -59,7 +59,7 @@ export default function QuickAccessSection({
                 <div className="flex-1 flex items-center justify-between min-w-0">
                   <span className="font-medium text-sm truncate">{item.label}</span>
                   {item.badge && (
-                    <Badge className="bg-red-600 hover:bg-red-600 text-xs h-4 px-1.5 flex-shrink-0 ml-2">
+                    <Badge className="bg-red-600 hover:bg-red-600 text-xs h-4 px-1.5 flex-shrink-0 ml-2 text-white">
                       {item.badge}
                     </Badge>
                   )}

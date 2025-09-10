@@ -96,7 +96,7 @@ export default function ChatSection({ isMobile, handleChatbotComplete, handleCha
             <div className="hidden lg:block pt-2">
               <div className="relative w-fit mx-auto lg:mx-0">
                 <Image
-                  src="/placeholder.svg?height=200&width=150"
+                  src="/img/body-shapes.png"
                   alt="3D body shapes"
                   width={150}
                   height={200}

@@ -385,7 +385,7 @@ export default function ProfileContent({ user, onUserUpdate }: ProfileContentPro
                 <p className="text-gray-600 mb-8 max-w-md mx-auto">
                   Discover amazing products and add them to your cart to get started with your shopping journey.
                 </p>
-                <Button className="bg-brand-primary hover-brand-primary-dark h-12 px-8 font-medium shadow-lg hover:shadow-xl transition-all duration-200">
+                <Button className="bg-brand-primary hover-brand-primary-dark h-12 px-8 font-medium shadow-lg hover:shadow-xl transition-all duration-200 text-white">
                   Continue Shopping
                 </Button>
               </div>

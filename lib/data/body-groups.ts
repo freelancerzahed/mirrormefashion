@@ -68,7 +68,7 @@ export function createGenderConfig(gender: "male" | "female"): GenderConfig {
     icon: "👕",
     label: "Torso",
     measurements: {
-      stomachWidth: { type: "value", keys: ["stomach_width"], min: 0, max: 1, step: STEPS.small, ticks: TICKS.extra },
+      stomachSize: { type: "value", keys: ["stomach_width"], min: 0, max: 1, step: STEPS.small, ticks: TICKS.extra },
       stomachShape: { type: "value", keys: [
       "shape_stomach_average",
       "shape_stomach_curvy",
@@ -86,7 +86,7 @@ export function createGenderConfig(gender: "male" | "female"): GenderConfig {
   // ✅ Add female-only measurements
   if (gender === "female") {
      torso.measurements.Trimester = { type: "value", keys: ["trimester"], min: 0, max: 1, step: STEPS.medium, ticks: 4 };
-    torso.measurements.breasts = { type: "value", keys: ["breasts"], min: 0, max: 1, step: STEPS.small, ticks: TICKS.extra };
+    torso.measurements.breastSize = { type: "value", keys: ["breasts"], min: 0, max: 1, step: STEPS.small, ticks: TICKS.extra };
    
   }
 
@@ -117,7 +117,7 @@ export function createGenderConfig(gender: "male" | "female"): GenderConfig {
       measurements: {
         shoulderHeight: { type: "value", keys: ["shoulder_height"], min: 0, max: 1, step: STEPS.large, ticks: TICKS.few },
         shoulderWidth: { type: "value", keys: ["shoulder_width"], min: 0, max: 1, step: 0.125, ticks: 9 },
-        trapezoid: { type: "value", keys: ["trapezoid"], min: 0, max: 1, step: 1, ticks: TICKS.binary },
+       
       },
     },
     torso,
@@ -126,8 +126,9 @@ export function createGenderConfig(gender: "male" | "female"): GenderConfig {
       label: "Arms",
       measurements: {
         armSize: { type: "value", keys: ["arm_size"], min: 0, max: 1, step: STEPS.medium, ticks: 4 },
-        armsDistended: { type: "value", keys: ["arms_distended"], min: 0, max: 1, step: 1, ticks: TICKS.binary },
-        torsoHeight: { type: "value", keys: ["torso_distended"], min: 0, max: 1, step: 1, ticks: TICKS.binary },
+        armsLength: { type: "value", keys: ["arms_distended"], min: 0, max: 1, step: 1, ticks: TICKS.binary },
+        torsoHeight: { type: "value", keys: ["torso_distended"], min: 0, max: 1, step: 0.5, ticks: TICKS.few },                                        
+        crotchHeight: { type: "value", keys: ["crotch_height"], min: 0, max: 1, step: 0.5, ticks: TICKS.few },                                        
       },
     },
     legs: {

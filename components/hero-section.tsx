@@ -14,7 +14,7 @@ export default function HeroSection({ scrollToSection }: HeroSectionProps) {
     <section id="heroSection" className="min-w-full h-full snap-center relative overflow-hidden">
       <div className="absolute inset-0">
         <Image
-          src="/placeholder.svg?height=1080&width=1920"
+          src="/img/hero-bg.jpg"
           alt="Fashion model"
           fill
           className="object-cover scale-105 transition-transform duration-[20s] ease-linear hover:scale-110"

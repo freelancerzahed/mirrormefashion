@@ -205,22 +205,24 @@ export default function EnhancedChatbot({ onComplete, onReset, isMobile = false 
 
     return "I want to make sure I understand you correctly! Please tell me if you identify as female, male, or non-binary. This helps me provide the most relevant fashion advice for you. 💫"
   }
+const processNameInput = (input: string) => {
+  const nameParts = input.trim().split(" ").filter(Boolean)
+  const firstName = nameParts[0]
 
-  const processNameInput = (input: string) => {
-    const nameParts = input.trim().split(" ")
-    if (nameParts.length >= 2) {
-      updateUserResponse("name", input)
-      setCurrentQuestion(3)
-
-      const firstName = nameParts[0]
-      return [
-        `It's wonderful to meet you, ${firstName}! That's such a lovely name. 🌟`,
-        `Now ${firstName}, I need to know your age range to give you the best style recommendations. Please select from the options below:`,
-      ]
-    }
-
-    return "I'd love to know both your first and last name so I can personalize our conversation better! Could you please share your full name with me? 😊"
+  if (!firstName) {
+    return "I didn’t catch your name 🤔 Could you please type it again?"
   }
+
+  // Always save the full input, even if it's one word
+  updateUserResponse("name", input)
+  setCurrentQuestion(3)
+
+  return [
+    `It's wonderful to meet you, ${firstName}! 🌟`,
+    `Now ${firstName}, I need to know your age range to give you the best style recommendations. Please select from the options below:`,
+  ]
+}
+
 
   const processAgeInput = (ageValue: string) => {
     if (ageValue) {
@@ -652,7 +654,7 @@ export default function EnhancedChatbot({ onComplete, onReset, isMobile = false 
               className="bg-primary-600 hover:bg-primary-700 px-6 h-12 rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
               disabled={isTyping || currentQuestion === 3}
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-4 h-4 text-white" />
             </Button>
           </div>
           <div className="flex items-center justify-between mt-2">
@@ -848,7 +850,7 @@ export default function EnhancedChatbot({ onComplete, onReset, isMobile = false 
             className="bg-primary-600 hover:bg-primary-700 px-4 h-10 rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
             disabled={isTyping || currentQuestion === 3}
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-4 h-4 text-white" />
           </Button>
         </div>
         <div className="flex items-center justify-between mt-2">

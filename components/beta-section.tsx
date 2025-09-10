@@ -15,7 +15,7 @@ export default function BetaSection({ isMobile, onSectionChange, scrollToSection
       <section id="betaSection" className="min-h-screen relative overflow-hidden pb-24">
         <div className="absolute inset-0">
           <Image
-            src="/placeholder.svg?height=1080&width=1920"
+            src="/img/section_1.jpeg"
             alt="Fashion professionals"
             fill
             className="object-cover"
@@ -128,7 +128,7 @@ export default function BetaSection({ isMobile, onSectionChange, scrollToSection
     <section id="betaSection" className="min-w-full h-full snap-center relative overflow-hidden">
       <div className="absolute inset-0">
         <Image
-          src="/placeholder.svg?height=1080&width=1920"
+          src="/img/section_1.jpeg"
           alt="Fashion professionals"
           fill
           className="object-cover scale-105 transition-transform duration-[20s] ease-linear"

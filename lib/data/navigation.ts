@@ -8,8 +8,6 @@ import {
 
 export const navigationItems = [
   { href: "/shop", label: "Shop", icon: Store },
-  { href: "/products", label: "Products", icon: ShoppingBag },
-  { href: "/profiles", label: "Community", icon: Users },
   { href: "/blog", label: "Blog", icon: BookOpen },
   { href: "/about", label: "About", icon: Info },
   { href: "/contact", label: "Contact", icon: Mail },

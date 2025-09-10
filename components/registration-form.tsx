@@ -31,6 +31,12 @@ export default function RegistrationForm({ userResponses, onSubmit }: Registrati
     bmi: "",
     age_range: "",
     gender: "",
+
+    // Extra fields from BodyViewer
+    shape: "",
+    shape_keys: "",
+    slider_values: "",
+    alphanumeric_code: "",
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -42,9 +48,10 @@ export default function RegistrationForm({ userResponses, onSubmit }: Registrati
   // Initialize form data with userResponses when component mounts or userResponses changes
   useEffect(() => {
     if (userResponses) {
-      console.log("UserResponses received:", userResponses) // Debug log
+      console.log("UserResponses received:", userResponses)
 
-      setFormData({
+      setFormData((prev) => ({
+        ...prev,
         name: userResponses.name || "",
         email: "",
         password: "",
@@ -56,27 +63,29 @@ export default function RegistrationForm({ userResponses, onSubmit }: Registrati
         bmi: userResponses.bmi || "",
         age_range: userResponses.age_range || "",
         gender: userResponses.gender || "",
-      })
+
+        // extra from BodyViewer
+        shape: userResponses.shape || "",
+        shape_keys: userResponses.shape_keys || "",
+        slider_values: userResponses.slider_values || "",
+        alphanumeric_code: userResponses.alphanumeric_code || "",
+      }))
     }
   }, [userResponses])
 
   // Calculate BMI whenever height or weight changes
   useEffect(() => {
     if (formData.height && formData.weight) {
-      const heightInMeters = Number(formData.height) * 0.0254 // inches to meters
-      const weightInKg = Number(formData.weight) * 0.453592 // lbs to kg
+      const heightInMeters = Number(formData.height) * 0.0254 // inches → meters
+      const weightInKg = Number(formData.weight) * 0.453592 // lbs → kg
       const bmiValue = (weightInKg / (heightInMeters * heightInMeters)).toFixed(1)
       setFormData((prev) => ({ ...prev, bmi: bmiValue }))
     } else if (userResponses?.bmi) {
-      // Use BMI from userResponses if available
       setFormData((prev) => ({ ...prev, bmi: userResponses.bmi }))
     }
   }, [formData.height, formData.weight, userResponses?.bmi])
 
-  const validateEmail = (email: string) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return re.test(email)
-  }
+  const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 
   const getPasswordStrength = (password: string) => {
     let strength = 0
@@ -97,29 +106,14 @@ export default function RegistrationForm({ userResponses, onSubmit }: Registrati
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required"
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required"
-    } else if (!validateEmail(formData.email)) {
-      newErrors.email = "Please enter a valid email address"
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required"
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters"
-    }
-
-    if (formData.password !== formData.password_confirmation) {
+    if (!formData.name.trim()) newErrors.name = "Name is required"
+    if (!formData.email.trim()) newErrors.email = "Email is required"
+    else if (!validateEmail(formData.email)) newErrors.email = "Please enter a valid email address"
+    if (!formData.password) newErrors.password = "Password is required"
+    else if (formData.password.length < 8) newErrors.password = "Password must be at least 8 characters"
+    if (formData.password !== formData.password_confirmation)
       newErrors.password_confirmation = "Passwords do not match"
-    }
-
-    if (!agreed) {
-      newErrors.agreement = "You must agree to the terms and conditions"
-    }
+    if (!agreed) newErrors.agreement = "You must agree to the terms and conditions"
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -127,33 +121,29 @@ export default function RegistrationForm({ userResponses, onSubmit }: Registrati
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
     if (validateForm()) {
       setIsSubmitting(true)
-
-      // Simulate API call
       setTimeout(() => {
         setIsSubmitting(false)
-        onSubmit(formData)
+        onSubmit(formData) // ✅ Now includes extra fields
       }, 2000)
     }
   }
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
-
-    // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }))
-    }
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }))
   }
 
   const passwordStrength = getPasswordStrength(formData.password)
   const passwordStrengthInfo = getPasswordStrengthLabel(passwordStrength)
 
   const completionPercentage = Math.round(
-    (Object.values(formData).filter((value) => value.trim() !== "").length / Object.keys(formData).length) * 100,
+    (Object.values(formData).filter((value) => value.toString().trim() !== "").length /
+      Object.keys(formData).length) *
+      100
   )
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-50 flex items-center justify-center p-0 sm:p-4">

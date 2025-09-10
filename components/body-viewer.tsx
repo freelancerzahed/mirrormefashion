@@ -3,18 +3,47 @@
 import { useRef, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from "@/components/ui/collapsible";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { User, RotateCcw, ArrowRight, Eye, EyeOff, Zap, RefreshCw, ChevronDown } from "lucide-react";
+import {
+  User,
+  RotateCcw,
+  ArrowRight,
+  Eye,
+  EyeOff,
+  Zap,
+  RefreshCw,
+  ChevronDown,
+} from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { TickSlider } from "@/components/tick-slider";
-import { createGenderConfig, GenderConfig, ShapeKeyConfig } from "@/lib/data/body-groups";
+import {
+  createGenderConfig,
+  GenderConfig,
+  ShapeKeyConfig,
+} from "@/lib/data/body-groups";
 import { modelLoader } from "@/lib/modelLoader";
 import AnalyzingScreen from "@/components/analyzing-screen";
-import { applyShape, updateShoulderWidthMorphs, updateStomachShapeMorphs,updateStomachWidthMorphs,getAllShapeKeyValues } from "@/lib/utils/bodyMorphs";
+import {
+  applyShape,
+  updateShoulderWidthMorphs,
+  updateStomachShapeMorphs,
+  updateStomachWidthMorphs,
+  getAllShapeKeyValues,
+} from "@/lib/utils/bodyMorphs";
 import { calculateTrapezoid } from "@/lib/utils/calculateTrapezoid";
-import { generateAlphanumericCode, ShapeKeys } from "@/lib/utils/bodyCodeGenerator";
+import {
+  generateAlphanumericCode,
+  ShapeKeys,
+} from "@/lib/utils/bodyCodeGenerator";
 import { applyFemaleSkinny } from "@/lib/utils/femaleSkinny";
+
+
+import { formatLabel } from "@/lib/utils";
 import * as THREE from "three";
 
 interface BodyViewerProps {
@@ -24,218 +53,262 @@ interface BodyViewerProps {
     bodyType?: string;
     gender: "male" | "female";
   };
-  onComplete: () => void;
+  onComplete: (data: {
+    shape: string;
+    shape_keys: string;
+    slider_values: Record<string, number>;
+    alphanumeric_code: string;
+  }) => void;
 }
 
 type MeasurementsState = Record<string, number>;
 
-export default function BodyViewer({ userResponses, onComplete }: BodyViewerProps) {
+export default function BodyViewer({
+  userResponses,
+  onComplete,
+}: BodyViewerProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const sceneRef = useRef<{ scene?: THREE.Scene; model?: THREE.Object3D }>({});
   const isMobile = useIsMobile();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [measurements, setMeasurements] = useState<MeasurementsState>({});
-const [trimesterEnabled, setTrimesterEnabled] = useState(false);
+  const [trimesterEnabled, setTrimesterEnabled] = useState(false);
 
   const genderConfig: GenderConfig = createGenderConfig(userResponses.gender);
-const [alphaCode, setAlphaCode] = useState<string>("");
+  const [alphaCode, setAlphaCode] = useState<string>("");
+// State for shape keys
+const [shapeKeysState, setShapeKeysState] = useState<ShapeKeys>({} as ShapeKeys);
+
+// ✅ Initialize measurements with all sliders = 0
+const [measurements, setMeasurements] = useState<MeasurementsState>(
+  () => createDefaultValues(genderConfig)
+);
+
+  // Load model
   useEffect(() => {
     if (!canvasRef.current) return;
 
     let modelPath = "/models/female_average.glb";
     if (userResponses.gender === "male") modelPath = "/models/male_average.glb";
 
-    if (userResponses.bodyType === "bust") modelPath = "/models/female_bust.glb";
-    else if (userResponses.bodyType === "slim") modelPath = userResponses.gender === "male" ? "/models/male_slim.glb" : "/models/female_slim.glb";
-    else if (userResponses.bodyType === "athletic") modelPath = userResponses.gender === "male" ? "/models/male_athletic.glb" : "/models/female_athletic.glb";
+    if (userResponses.bodyType === "bust")
+      modelPath = "/models/female_bust.glb";
+    else if (userResponses.bodyType === "slim")
+      modelPath =
+        userResponses.gender === "male"
+          ? "/models/male_slim.glb"
+          : "/models/female_slim.glb";
+    else if (userResponses.bodyType === "athletic")
+      modelPath =
+        userResponses.gender === "male"
+          ? "/models/male_athletic.glb"
+          : "/models/female_athletic.glb";
 
-    const { dispose, loadPromise, scene, model } = modelLoader(canvasRef.current, modelPath, 1.0, "bodyRearBtn");
+    const { dispose, loadPromise, scene, model } = modelLoader(
+      canvasRef.current,
+      modelPath,
+      1.0,
+      "bodyRearBtn"
+    );
     sceneRef.current.scene = scene;
     sceneRef.current.model = model;
 
     setIsAnalyzing(true);
     if (loadPromise) loadPromise.finally(() => setIsAnalyzing(false));
+    if (loadPromise) loadPromise.finally(() => {
+ scene.traverse((child) => {
+    if (!(child instanceof THREE.Mesh)) return;
+    if (!child.morphTargetDictionary || !child.morphTargetInfluences) return;
+ let defaults = getAllShapeKeyValues(child);
+ console.log("Initial shape keys:", defaults);
+ 
+
+    setShapeKeysState((prev) => ({ ...prev, ...defaults }));
+    let code = generateAlphanumericCode(shapeKeysState, "average");
+  setAlphaCode(code);
+  });
+
+
+    });
     else setTimeout(() => setIsAnalyzing(false), 10000);
 
     return () => dispose?.();
   }, [isMobile, userResponses.gender, userResponses.bodyType]);
 
-
-
+  // Handle trimester
   useEffect(() => {
-  if (!trimesterEnabled) {
-    setMeasurements((prev) => ({
-      ...prev,
-      Trimester: 0,
-    }));
-  }
-}, [trimesterEnabled]);
+    if (!trimesterEnabled) {
+      setMeasurements((prev) => ({
+        ...prev,
+        Trimester: 0,
+      }));
+    }
+  }, [trimesterEnabled]);
 
-useEffect(() => {
-  // Only apply for female skinny body type
- 
-  
+  // Apply skinny morphs
+  useEffect(() => {
+    if (!sceneRef.current.model) return;
 
-  if (!sceneRef.current.model) return;
-
-  sceneRef.current.model.traverse((child) => {
-    if (!(child instanceof THREE.Mesh)) return;
-    if (!child.morphTargetDictionary || !child.morphTargetInfluences) return;
- applyFemaleSkinny({
-    mesh: child,
-    measurements,
-    dict: child.morphTargetDictionary,
-    debug: true,
+    sceneRef.current.model.traverse((child) => {
+      if (!(child instanceof THREE.Mesh)) return;
+      if (!child.morphTargetDictionary || !child.morphTargetInfluences) return;
+      applyFemaleSkinny({
+        mesh: child,
+        measurements,
+        dict: child.morphTargetDictionary,
+        debug: true,
+      });
     });
+  }, [
+    measurements.headSize,
+    measurements.neckHeight,
+    measurements.shoulderWidth,
+    measurements.shoulderHeight,
+    measurements.neckShape,
+    userResponses.gender,
+    userResponses.bodyType,
+  ]);
 
-  
 
- 
+// ----------------- Default Slider Values -----------------
+function createDefaultValues(config: GenderConfig): Record<string, number> {
+  const defaults: Record<string, number> = {};
+  Object.values(config).forEach((group) => {
+    Object.keys(group.measurements).forEach((name) => {
+      defaults[name] = 0; // every slider starts at 0
+    });
   });
-}, [
-  measurements.headSize,
-  measurements.neckHeight,
-  measurements.shoulderWidth,
-  measurements.shoulderHeight,
-  measurements.neckShape,
-  userResponses.gender,
-  userResponses.bodyType,
-]);
+  return defaults;
+}
+
+  // ---------------------- shapeKeyHandlers ----------------------
+  const shapeKeyHandlers: Record<
+    string,
+    (
+      mesh: THREE.Mesh,
+      index: number,
+      value: number,
+      dict: Record<string, number>
+    ) => void
+  > = {
+    headShape: (mesh, _index, value, dict) => {
+      if (!mesh.morphTargetInfluences) return;
+      const shapes = ["shape_head_oblong", "shape_head_round", "shape_head_coned"];
+      applyShape(mesh, dict, value, shapes);
+    },
+
+    neckShape: (mesh, _index, value, dict) => {
+      if (!mesh.morphTargetInfluences) return;
+      const idx = dict["neck_shape"];
+      if (idx === undefined) return;
+      const stomachWidthValue = measurements.stomachSize || 0;
+      mesh.morphTargetInfluences[idx] = value === 0 ? 0 : stomachWidthValue;
+    },
+
+    shoulderWidth: (mesh, _index, value, dict) => {
+      if (!mesh.morphTargetInfluences) return;
+      updateShoulderWidthMorphs({
+        mesh,
+        value,
+        measurements,
+        dict,
+        debug: true,
+      });
+
+      const trapezoidIdx = dict["trapezoid"];
+      if (trapezoidIdx !== undefined) {
+        const shoulderHeight = measurements.shoulderHeight || 0;
+        const neckWidth = measurements.neckWidth || 0;
+        console.log("Calculating trapezoid with:", value, shoulderHeight, neckWidth);
+        mesh.morphTargetInfluences[trapezoidIdx] = calculateTrapezoid(
+          value,
+          shoulderHeight,
+          neckWidth
+        );
+      }
+    },
+
+    stomachShape: (mesh, _index, value, dict) => {
+      if (!mesh.morphTargetInfluences) return;
+      const stomachWidthValue = measurements.stomachSize || 0;
+      updateStomachShapeMorphs({
+        mesh,
+        stomachShape: value,
+        stomachWidthValue,
+        dict,
+        debug: true,
+        setTrimesterEnabled,
+      });
+    },
+
+    stomachSize: (mesh, _index, value, dict) => {
+      if (!mesh.morphTargetInfluences) return;
+      updateStomachWidthMorphs({
+        mesh,
+        stomachShape: measurements.stomachShape || 0,
+        stomachWidthValue: value,
+        neckShapeValue: measurements.neckShape || 0,
+        dict,
+        debug: true,
+      });
+
+      const trapezoidIdx = dict["trapezoid"];
+      if (trapezoidIdx !== undefined) {
+        const shoulderHeight = measurements.shoulderHeight || 0;
+        const neckWidth = measurements.neckWidth || 0;
+        mesh.morphTargetInfluences[trapezoidIdx] = calculateTrapezoid(
+          measurements.shoulderWidth || 0,
+          shoulderHeight,
+          neckWidth
+        );
+      }
+    },
+
+    bottomShape: (mesh, _index, value, dict) => {
+      if (!mesh.morphTargetInfluences) return;
+      const shapes = [
+        "bottom_shape_round",
+        "bottom_shape_square",
+        "bottom_shape_inverted",
+        "bottom_shape_flat",
+        "bottom_shape_heart",
+      ];
+      applyShape(mesh, dict, value, shapes);
+    },
+  };
 
 
-
-   // ---------------------- shapeKeyHandlers ----------------------
-const shapeKeyHandlers: Record<
-  string,
-  (mesh: THREE.Mesh, index: number, value: number, dict: Record<string, number>) => void
-> = {
-  headShape: (mesh, _index, value, dict) => {
-    if (!mesh.morphTargetInfluences) return;
-    const shapes = ["shape_head_oblong", "shape_head_round", "shape_head_coned"];
-    applyShape(mesh, dict, value, shapes);
-  },
-
-  neckShape: (mesh, _index, value, dict) => {
-    if (!mesh.morphTargetInfluences) return;
-    const idx = dict["neck_shape"];
-    if (idx === undefined) return;
-
-    const stomachWidthValue = measurements.stomachWidth || 0;
-    mesh.morphTargetInfluences[idx] = value === 0 ? 0 : stomachWidthValue;
-  },
-
-  shoulderWidth: (mesh, _index, value, dict) => {
-    if (!mesh.morphTargetInfluences) return;
-    updateShoulderWidthMorphs({ mesh, value, measurements, dict, debug: true });
-
-    // Automatically update trapezoid
-    const trapezoidIdx = dict["trapezoid"];
-    if (trapezoidIdx !== undefined) {
-      const shoulderHeight = measurements.shoulderHeight || 0;
-      const neckShape = measurements.neckShape || 0;
-      mesh.morphTargetInfluences[trapezoidIdx] = calculateTrapezoid(value, shoulderHeight, neckShape);
-    }
-  },
-
-  stomachShape: (mesh, _index, value, dict) => {
-    if (!mesh.morphTargetInfluences) return;
-    const stomachWidthValue = measurements.stomachWidth || 0;
-
-    updateStomachShapeMorphs({
-      mesh,
-      stomachShape: value,
-      stomachWidthValue,
-      dict,
-      debug: true,
-      setTrimesterEnabled,
-    });
-  },
-
-  stomachWidth: (mesh, _index, value, dict) => {
-    if (!mesh.morphTargetInfluences) return;
-
-    updateStomachWidthMorphs({
-      mesh,
-      stomachShape: measurements.stomachShape || 0,
-      stomachWidthValue: value,
-      neckShapeValue: measurements.neckShape || 0,
-      dict,
-      debug: true,
-    });
-
-    // Update trapezoid
-    const trapezoidIdx = dict["trapezoid"];
-    if (trapezoidIdx !== undefined) {
-      const shoulderHeight = measurements.shoulderHeight || 0;
-      const neckShape = measurements.neckShape || 0;
-      mesh.morphTargetInfluences[trapezoidIdx] = calculateTrapezoid(measurements.shoulderWidth || 0, shoulderHeight, neckShape);
-    }
-  },
-
-  bottomShape: (mesh, _index, value, dict) => {
-    if (!mesh.morphTargetInfluences) return;
-    const shapes = [
-      "bottom_shape_round",
-      "bottom_shape_square",
-      "bottom_shape_inverted",
-      "bottom_shape_flat",
-      "bottom_shape_heart",
-    ];
-    applyShape(mesh, dict, value, shapes);
-  },
-};
-
-
-// Build ShapeKeys
-const buildShapeKeys = (): ShapeKeys => ({
-  stomach_shape: measurements.stomachShape ?? 0,
-  head_size: measurements.headSize ?? 0,           // number
-  head_shape: measurements.headShape ?? "oval",    // string
-  shoulder_width: measurements.shoulderWidth ?? 0, // number
-  shoulder_height: measurements.shoulderHeight ?? 0,
-  breast: measurements.breast ?? 0,
-  arm_size: measurements.armSize ?? 0,
-  height: measurements.height ?? 64,
-  legs_size: measurements.legsSize ?? 0,
-  hips_size: measurements.hipsSize ?? 0,
-});
-
-
-  // ---------------------- handleMeasurementChange ----------------------
 const handleMeasurementChange = (key: string, value: number) => {
-  // Update local state
+  // --- Update measurements (all sliders always exist) ---
   setMeasurements((prev) => {
     const newState = { ...prev, [key]: value };
 
-    // Optional cross-dependency logic
-    if (key === "stomachWidth") newState.shoulderWidth = value;
-    if (key === "shoulderWidth") newState.stomachWidth = value;
+    // keep stomachSize & shoulderWidth linked
+    if (key === "stomachSize") newState.shoulderWidth = value;
+    if (key === "shoulderWidth") newState.stomachSize = value;
 
     return newState;
   });
 
-  // Ensure the scene is loaded
-  if (!sceneRef.current.scene) return;
+  // --- Update shape keys in the model ---
+  if (!sceneRef.current?.scene) return;
 
-  // Traverse all meshes
   sceneRef.current.scene.traverse((child) => {
     if (!(child instanceof THREE.Mesh)) return;
     const mesh = child;
     const dict = mesh.morphTargetDictionary;
     if (!dict || !mesh.morphTargetInfluences) return;
 
-    // Find the measurement config
+    // find config for this slider
     const measurement: ShapeKeyConfig | undefined = Object.values(genderConfig)
       .flatMap((group) => Object.entries(group.measurements))
       .find(([mKey]) => mKey === key)?.[1];
 
     if (!measurement) return;
 
-    // Use custom handler if exists
+    // use handler if exists, otherwise map directly
     if (shapeKeyHandlers[key]) {
       shapeKeyHandlers[key](mesh, -1, value, dict);
     } else {
-      // Default behavior: set all keys from config
       measurement.keys.forEach((morphKey) => {
         const index = dict[morphKey];
         if (index !== undefined && mesh.morphTargetInfluences) {
@@ -244,22 +317,31 @@ const handleMeasurementChange = (key: string, value: number) => {
       });
     }
 
-    // ✅ Debug: log all shape key values
-    console.log("Shape Key Values:", getAllShapeKeyValues(mesh));
+    // refresh shapeKeysState with updated morphs
+    const updatedShapeKeys = getAllShapeKeyValues(mesh);
+    console.log("Updated shape keys:", updatedShapeKeys);
+    setShapeKeysState((prev) => ({ ...prev, ...updatedShapeKeys }));
   });
 
-   // ---------------- Live Alpha Code Update ----------------
-    const shapeKeys = buildShapeKeys();
+  // --- Update alpha code from current shape keys ---
 
-    const code = generateAlphanumericCode(shapeKeys, 'average');
-    setAlphaCode(code);
+  const code = generateAlphanumericCode(shapeKeysState, "average");
+  setAlphaCode(code);
 };
 
-
   const handleContinue = () => {
-    onComplete();
-    console.log("Final Alphanumeric Code:", alphaCode);
+   
+    const payload = {
+      shape: userResponses.bodyType || "average",
+      shape_keys: shapeKeysState,
+      slider_values: measurements,
+      alphanumeric_code: alphaCode,
+    };
+
+    console.log("Final Payload:", payload);
+    onComplete(payload);
   };
+
   // -------------------
   // Mobile layout
   // -------------------
@@ -301,7 +383,7 @@ const handleMeasurementChange = (key: string, value: number) => {
                       <div key={mKey} className="space-y-2">
                         <div className="flex justify-between items-center">
                           <label className="text-sm font-medium text-gray-700 capitalize" htmlFor={`slider-${mKey}`}>
-                            {mKey}
+                            {formatLabel(mKey)}
                           </label>
                           <Badge variant="outline" className="text-xs bg-red-50 text-red-600 border-red-200">
                             {measurements[mKey] ?? "--"}
@@ -414,7 +496,7 @@ const handleMeasurementChange = (key: string, value: number) => {
                         <div key={mKey} className="space-y-2">
                           <div className="flex justify-between items-center">
                             <label className="text-sm font-medium text-gray-700 capitalize" htmlFor={`slider-${mKey}`}>
-                              {mKey}
+                              {formatLabel(mKey)}
                             </label>
                             <Badge variant="outline" className="text-xs bg-red-50 text-red-600 border-red-200">
                               {measurements[mKey] ?? "--"}

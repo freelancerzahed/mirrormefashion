@@ -72,7 +72,7 @@ export default function MobileFeaturesSection({ onSectionChange }: MobileFeature
           <Card className="group hover:shadow-2xl transition-all duration-500 border-0 bg-white/90 backdrop-blur-xl transform hover:-translate-y-2 hover:scale-105 active:scale-95 relative overflow-hidden rounded-3xl shadow-lg">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-50/80 to-pink-100/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="absolute top-4 right-4 w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-black text-sm">2</span>
+              <span className="text-white font-black text-sm text-white">2</span>
             </div>
             <CardContent className="p-6 relative z-10">
               <div className="flex items-start space-x-4">

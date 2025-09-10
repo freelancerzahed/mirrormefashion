@@ -251,7 +251,7 @@ export default function Navigation() {
                 className="relative h-10 w-10 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors"
               >
                 <Bell className="h-5 w-5" />
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-600 hover:bg-red-600">
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-600 hover:bg-red-600 text-white">
                   3
                 </Badge>
                 <span className="sr-only">Notifications</span>
@@ -268,7 +268,7 @@ export default function Navigation() {
               <Link href="/wishlist">
                 <Heart className="h-5 w-5" />
                 {wishlistItemCount > 0 && (
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-600 hover:bg-red-600">
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-600 hover:bg-red-600 text-white">
                     {wishlistItemCount}
                   </Badge>
                 )}
@@ -286,7 +286,7 @@ export default function Navigation() {
               <Link href="/cart">
                 <ShoppingCart className="h-5 w-5" />
                 {cartItemCount > 0 && (
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-600 hover:bg-red-600">
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-600 hover:bg-red-600 text-white">
                     {cartItemCount}
                   </Badge>
                 )}
@@ -307,7 +307,7 @@ export default function Navigation() {
                 >
                   <Link href="/login">Sign In</Link>
                 </Button>
-                <Button size="sm" asChild className="bg-red-600 hover:bg-red-700">
+                <Button size="sm" asChild className="bg-red-600 hover:bg-red-700 text-white">
                   <Link href="/register">Get Started</Link>
                 </Button>
               </div>

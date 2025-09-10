@@ -30,7 +30,7 @@ export default function CartPage() {
           <h2 className="text-2xl font-semibold text-gray-900 mb-2">Your cart is empty</h2>
           <p className="text-gray-600 mb-6">Add some products to get started!</p>
           <Link href="/shop">
-            <Button className="bg-primary hover:bg-primary/90">Continue Shopping</Button>
+            <Button className="bg-primary hover:bg-primary/90 text-white">Continue Shopping</Button>
           </Link>
         </div>
       </div>
@@ -132,7 +132,7 @@ export default function CartPage() {
                     </Button>
                   </Link>
                   <Link href="/shop">
-                    <Button variant="outline" className="w-full bg-transparent">
+                    <Button variant="outline" className="w-full bg-transparent text-white">
                       Continue Shopping
                     </Button>
                   </Link>
