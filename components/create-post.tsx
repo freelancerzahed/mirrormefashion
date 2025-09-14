@@ -1,94 +1,118 @@
-"use client"
+"use client";
 
-import type React from "react"
-
-import { useRef, useState, useEffect } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ImageIcon, Video, Smile, MapPin, X, ChevronDown, Globe, Lock } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import type React from "react";
+import { useRef, useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  ImageIcon,
+  Video,
+  Smile,
+  MapPin,
+  X,
+  ChevronDown,
+  Globe,
+  Lock,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface CreatePostProps {
-  onCreatePost: (post: any) => void
+  onCreatePost: (post: any) => void;
 }
 
 export default function CreatePost({ onCreatePost }: CreatePostProps) {
-  const [postContent, setPostContent] = useState("")
-  const [selectedMedia, setSelectedMedia] = useState<string | null>(null)
-  const [mediaType, setMediaType] = useState<"image" | "video" | null>(null)
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [postVisibility, setPostVisibility] = useState<"public" | "private">("public")
+  const [postContent, setPostContent] = useState("");
+  const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
+  const [mediaType, setMediaType] = useState<"image" | "video" | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [postVisibility, setPostVisibility] = useState<"public" | "private">(
+    "public"
+  );
 
-  const imageInputRef = useRef<HTMLInputElement>(null)
-  const videoInputRef = useRef<HTMLInputElement>(null)
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
-  // Effect to clean up object URLs when media changes or component unmounts
+  // cleanup object URLs
   useEffect(() => {
     return () => {
       if (selectedMedia) {
-        URL.revokeObjectURL(selectedMedia)
+        URL.revokeObjectURL(selectedMedia);
       }
+    };
+  }, [selectedMedia]);
+
+  const handleSubmit = async () => {
+    if (!postContent.trim() && !selectedMedia) return;
+
+    const formData = new FormData();
+    formData.append("content", postContent);
+    formData.append("visibility", postVisibility);
+
+    if (imageInputRef.current?.files?.[0]) {
+      formData.append("media", imageInputRef.current.files[0]);
     }
-  }, [selectedMedia])
-
-  const handleSubmit = () => {
-    if (!postContent.trim() && !selectedMedia) return
-
-    const newPost = {
-      id: Date.now(),
-      user: {
-        name: "You",
-        avatar: "/placeholder.svg?height=40&width=40&text=You",
-        verified: false,
-      },
-      content: postContent,
-      image: selectedMedia,
-      mediaType: mediaType,
-      timestamp: "Just now",
-      likes: 0,
-      comments: [],
-      shares: 0,
-      liked: false,
-      showComments: false,
-      visibility: postVisibility, // Add visibility to the post object
+    if (videoInputRef.current?.files?.[0]) {
+      formData.append("media", videoInputRef.current.files[0]);
     }
 
-    onCreatePost(newPost)
-    setPostContent("")
-    // Revoke URL before clearing state
-    if (selectedMedia) {
-      URL.revokeObjectURL(selectedMedia)
-    }
-    setSelectedMedia(null)
-    setMediaType(null)
-    setIsExpanded(false)
-    setPostVisibility("public") // Reset visibility
-  }
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/posts", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Sanctum / JWT token
+        },
+        body: formData,
+      });
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, type: "image" | "video") => {
-    const file = event.target.files?.[0]
+      const data = await response.json();
+
+      if (response.ok) {
+        onCreatePost(data.post);
+        setPostContent("");
+        if (selectedMedia) URL.revokeObjectURL(selectedMedia);
+        setSelectedMedia(null);
+        setMediaType(null);
+        setIsExpanded(false);
+        setPostVisibility("public");
+      } else {
+        console.error("Post failed:", data);
+      }
+    } catch (error) {
+      console.error("Error creating post:", error);
+    }
+  };
+
+  const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    type: "image" | "video"
+  ) => {
+    const file = event.target.files?.[0];
     if (file) {
-      // Revoke previous URL if exists
       if (selectedMedia) {
-        URL.revokeObjectURL(selectedMedia)
+        URL.revokeObjectURL(selectedMedia);
       }
-      const objectURL = URL.createObjectURL(file)
-      setSelectedMedia(objectURL)
-      setMediaType(type)
+      const objectURL = URL.createObjectURL(file);
+      setSelectedMedia(objectURL);
+      setMediaType(type);
     }
-  }
+  };
 
   const removeMedia = () => {
     if (selectedMedia) {
-      URL.revokeObjectURL(selectedMedia)
+      URL.revokeObjectURL(selectedMedia);
     }
-    setSelectedMedia(null)
-    setMediaType(null)
-    if (imageInputRef.current) imageInputRef.current.value = ""
-    if (videoInputRef.current) videoInputRef.current.value = ""
-  }
+    setSelectedMedia(null);
+    setMediaType(null);
+    if (imageInputRef.current) imageInputRef.current.value = "";
+    if (videoInputRef.current) videoInputRef.current.value = "";
+  };
 
   return (
     <Card className="shadow-sm border-gray-200 hover:shadow-md transition-shadow">
@@ -96,7 +120,9 @@ export default function CreatePost({ onCreatePost }: CreatePostProps) {
         <div className="flex gap-3 md:gap-4">
           <Avatar className="h-10 w-10 md:h-12 md:w-12 flex-shrink-0">
             <AvatarImage src="/placeholder.svg?height=40&width=40&text=You" />
-            <AvatarFallback className="bg-red-100 text-red-600 font-semibold">You</AvatarFallback>
+            <AvatarFallback className="bg-red-100 text-red-600 font-semibold">
+              You
+            </AvatarFallback>
           </Avatar>
 
           <div className="flex-1 space-y-3 md:space-y-4">
@@ -118,7 +144,11 @@ export default function CreatePost({ onCreatePost }: CreatePostProps) {
                       className="w-full h-48 md:h-64 object-cover"
                     />
                   ) : (
-                    <video src={selectedMedia} controls className="w-full h-48 md:h-64 object-cover bg-black">
+                    <video
+                      src={selectedMedia}
+                      controls
+                      className="w-full h-48 md:h-64 object-cover bg-black"
+                    >
                       Your browser does not support the video tag.
                     </video>
                   )}
@@ -171,6 +201,7 @@ export default function CreatePost({ onCreatePost }: CreatePostProps) {
                     <Video className="h-4 w-4" />
                     <span className="hidden sm:inline">Video</span>
                   </Button>
+
                   <Button
                     variant="ghost"
                     size="sm"
@@ -179,6 +210,7 @@ export default function CreatePost({ onCreatePost }: CreatePostProps) {
                     <Smile className="h-4 w-4" />
                     <span className="hidden sm:inline">Feeling</span>
                   </Button>
+
                   <Button
                     variant="ghost"
                     size="sm"
@@ -211,10 +243,14 @@ export default function CreatePost({ onCreatePost }: CreatePostProps) {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start">
-                      <DropdownMenuItem onClick={() => setPostVisibility("public")}>
+                      <DropdownMenuItem
+                        onClick={() => setPostVisibility("public")}
+                      >
                         <Globe className="h-4 w-4 mr-2" /> Public
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setPostVisibility("private")}>
+                      <DropdownMenuItem
+                        onClick={() => setPostVisibility("private")}
+                      >
                         <Lock className="h-4 w-4 mr-2" /> Private
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -225,15 +261,14 @@ export default function CreatePost({ onCreatePost }: CreatePostProps) {
                       variant="ghost"
                       size="sm"
                       onClick={() => {
-                        setIsExpanded(false)
-                        setPostContent("")
-                        // Revoke URL before clearing state
+                        setIsExpanded(false);
+                        setPostContent("");
                         if (selectedMedia) {
-                          URL.revokeObjectURL(selectedMedia)
+                          URL.revokeObjectURL(selectedMedia);
                         }
-                        setSelectedMedia(null)
-                        setMediaType(null)
-                        setPostVisibility("public") // Reset visibility on cancel
+                        setSelectedMedia(null);
+                        setMediaType(null);
+                        setPostVisibility("public");
                       }}
                       className="text-gray-500 hover:text-gray-700 active:scale-95 transition-all"
                     >
@@ -254,5 +289,5 @@ export default function CreatePost({ onCreatePost }: CreatePostProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

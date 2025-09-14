@@ -14,8 +14,11 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      await login(email, password);
-      router.push("/dashboard"); // redirect after successful login
+      const success = await login(email, password);
+
+      if (success) {
+        router.push("/dashboard"); // ✅ redirect only if login was successful
+      }
     } catch (err) {
       console.error("Login failed:", err);
     }
@@ -23,18 +26,24 @@ export default function LoginPage() {
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
-      <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-2xl p-8 w-96">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-lg rounded-2xl p-8 w-96"
+      >
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 
-        {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
+        {error && (
+          <p className="text-red-500 text-sm mb-4 text-center">{error}</p>
+        )}
 
         <div className="mb-4">
           <label className="block text-gray-700">Email</label>
           <input
             type="email"
             value={email}
+            disabled={loading}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg"
+            className="w-full px-4 py-2 border rounded-lg disabled:bg-gray-100"
             required
           />
         </div>
@@ -44,8 +53,9 @@ export default function LoginPage() {
           <input
             type="password"
             value={password}
+            disabled={loading}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg"
+            className="w-full px-4 py-2 border rounded-lg disabled:bg-gray-100"
             required
           />
         </div>
@@ -53,7 +63,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg"
+          className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg disabled:opacity-70"
         >
           {loading ? "Logging in..." : "Login"}
         </button>

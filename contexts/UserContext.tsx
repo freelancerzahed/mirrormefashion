@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { useRouter } from "next/navigation";
+
 interface User {
   id: number;
   name: string;
@@ -13,7 +14,7 @@ interface UserContextType {
   user: User | null;
   loading: boolean;
   error: string | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>; // ✅ return boolean
   logout: () => void;
 }
 
@@ -24,14 +25,16 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const router = useRouter();
+
   // Load user from localStorage on mount
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) setUser(JSON.parse(storedUser));
     setLoading(false);
   }, []);
- const router = useRouter(); // ✅ useRouter must be called here inside component
-  const login = async (email: string, password: string) => {
+
+  const login = async (email: string, password: string): Promise<boolean> => {
     setLoading(true);
     setError(null);
 
@@ -58,7 +61,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         throw new Error("Backend returned non-JSON response");
       }
 
-      if (!res.ok) throw new Error(data.error || "Login failed");
+      if (!res.ok) throw new Error(data.error || "Email or password is incorrect");
 
       setUser(data.user);
       localStorage.setItem("user", JSON.stringify(data.user));
@@ -66,32 +69,34 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       if (data.token) {
         document.cookie = `token=${data.token}; path=/;`;
       }
+
+      return true; // ✅ login successful
     } catch (err: any) {
       setError(err.message);
+      return false; // ✅ login failed
     } finally {
       setLoading(false);
     }
   };
-const logout = async () => {
-  try {
-    const res = await fetch("/api/auth/logout", {
-      method: "GET",          // Must match proxy
-      credentials: "include",
-    });
 
-    const data = await res.json();
-    console.log("Backend logout response:", data);
-  } catch (err) {
-    console.error("Backend logout failed", err);
-  } finally {
-    // Clear cookies and local storage
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    localStorage.removeItem("user");
-    setUser(null);
-    router.push("/login");      // Redirect to login page
-  }
-};
+  const logout = async () => {
+    try {
+      const res = await fetch("/api/auth/logout", {
+        method: "GET",
+        credentials: "include",
+      });
 
+      const data = await res.json();
+      console.log("Backend logout response:", data);
+    } catch (err) {
+      console.error("Backend logout failed", err);
+    } finally {
+      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      localStorage.removeItem("user");
+      setUser(null);
+      router.push("/login");
+    }
+  };
 
   return (
     <UserContext.Provider value={{ user, loading, error, login, logout }}>
