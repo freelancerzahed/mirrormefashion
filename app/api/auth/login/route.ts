@@ -2,12 +2,16 @@ import { NextResponse } from "next/server";
 import { BACKEND_URL } from "@/config";
 
 export async function POST(req: Request) {
-  const body = await req.json();
-
   try {
+    const body = await req.json();
+
     const res = await fetch(`${BACKEND_URL}/auth/login`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "App-Key": "123456", // if backend requires it
+      },
       body: JSON.stringify(body),
       credentials: "include", // include cookies if backend uses sessions
     });
@@ -20,7 +24,10 @@ export async function POST(req: Request) {
     } else {
       const text = await res.text();
       console.error("Backend returned non-JSON response:", text);
-      return NextResponse.json({ error: "Backend returned non-JSON response" }, { status: 500 });
+      return NextResponse.json(
+        { error: "Backend returned non-JSON response", raw: text },
+        { status: 500 }
+      );
     }
   } catch (err) {
     console.error("Fetch failed:", err);

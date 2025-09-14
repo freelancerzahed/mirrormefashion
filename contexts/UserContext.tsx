@@ -41,11 +41,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
-       headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "App-Key": "123456",
-      },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
           password,
