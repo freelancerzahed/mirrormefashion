@@ -277,20 +277,19 @@ const handleRegistrationSubmit = async (formData: any) => {
   console.log("Registration submitted:", formData);
 
   try {
-    const response = await fetch(`${BACKEND_URL}/auth/signup`, {
+    // Call Next.js proxy API instead of HTTP backend
+    const response = await fetch("/api/auth/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
       body: JSON.stringify(formData),
-      credentials: "include", // include cookies if backend uses sessions
     });
 
-    let data: any = null;
     const contentType = response.headers.get("content-type") || "";
+    let data: any = null;
 
-    // Check if response is JSON
     if (contentType.includes("application/json")) {
       data = await response.json();
     } else {
@@ -300,13 +299,17 @@ const handleRegistrationSubmit = async (formData: any) => {
     }
 
     if (response.ok && data.status) {
-      alert("🎉 Welcome to Mirror Me Fashion! Your account has been created successfully!");
+      alert("🎉 Welcome! Your account has been created successfully!");
       console.log("Registered user:", data.user);
 
-      // Save token to local storage
+      // Save token if backend returns it
       if (data.token) {
         localStorage.setItem("token", data.token);
       }
+
+      // Optional: auto-login the user using UserContext login
+      // await login(formData.email, formData.password);
+
     } else {
       alert("⚠️ Registration failed: " + (data.message || JSON.stringify(data.errors)));
       console.error("Registration errors:", data.errors || data.message);
