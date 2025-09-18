@@ -389,21 +389,18 @@ const handleMeasurementChange = (key: string, value: number) => {
                             {measurements[mKey] ?? "--"}
                           </Badge>
                         </div>
-                        {config.type === "value" && (
-                          <TickSlider
+                        <TickSlider
                             id={`slider-${mKey}`}
                             label={mKey}
                             value={measurements[mKey] ?? config.min ?? 0}
                             min={config.min ?? 0}
-                            max={config.max ?? 100}
-                            step={0.1}
-                            ticks={config.ticks ?? 5}
-                          
-                            onChange={(val: number) => handleMeasurementChange(config.keys[0], val)}
+                            max={config.max ?? 1}
+                            step={config.step ?? 0.5}
+                            ticks={config.ticks ?? 2}
+                            onChange={(val: number) => handleMeasurementChange(mKey, val)}
                             name={mKey}
                            disabled={mKey === "Trimester" ? !trimesterEnabled : false}
                           />
-                        )}
                       </div>
                     ))}
                   </div>
@@ -412,7 +409,7 @@ const handleMeasurementChange = (key: string, value: number) => {
             ))}
           </div>
 
-          <div className="sticky bottom-0 left-0 right-0 p-3 bg-white border-t border-gray-200 flex-shrink-0 shadow-lg z-50 mb-20">
+          <div className="sticky bottom-0 left-0 right-0 p-3 bg-white border-t border-gray-200 flex-shrink-0 shadow-lg z-50 mb-10">
             <div className="grid grid-cols-2 gap-2">
               <Button variant="outline" id="bodyRearBtn" className="flex-1 h-12 bg-transparent border-red-200 text-red-600 hover:bg-red-50">
                 <RotateCcw className="w-4 h-4 mr-2" /> Body Rear
@@ -458,7 +455,7 @@ const handleMeasurementChange = (key: string, value: number) => {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">{userResponses.name}</h3>
-                  <p className="text-sm text-gray-600">Body Type • {userResponses.age_range}</p>
+                 
                 </div>
               </div>
               <Button size="sm" variant="outline" className="flex items-center gap-2 h-8 text-xs border-red-200 text-red-600 hover:bg-red-50">
@@ -548,7 +545,8 @@ const handleMeasurementChange = (key: string, value: number) => {
             </div>
 
             <div className="mt-4 text-center">
-              <p className="text-sm text-gray-600 mb-3">Adjust measurements on the left to fine-tune your model</p>
+              <p className="text-sm text-gray-600 mb-3">Adjust the measurements on the left to construct your body
+model.</p>
               <div className="flex justify-center space-x-2">
                 <Button size="sm" variant="outline" className="h-8 border-red-200 text-red-600 hover:bg-red-50">
                   <Zap className="w-3 h-3 mr-1" /> Presets

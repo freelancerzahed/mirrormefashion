@@ -51,7 +51,7 @@ export default function MobileBottomNavGeneral() {
   const cartItemCount = state.itemCount
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-gray-200 px-2 py-2 md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-gray-200 px-2 py-0.5 md:hidden">
       <div className="flex items-center justify-around">
         {bottomNavItems.map((item) => {
           const isActive = pathname === item.href
@@ -66,13 +66,13 @@ export default function MobileBottomNavGeneral() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-all duration-200 min-w-0 ${
+              className={`flex flex-col items-center gap-0.5 px-3 py-0.5 rounded-lg transition-all duration-200 min-w-0 ${
                 isActive ? "bg-primary-50 text-primary-700" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
               }`}
             >
               <div className="relative">
-                <div className={`p-1.5 rounded-lg ${isActive ? "bg-primary-100" : "bg-transparent"}`}>
-                  <item.icon className={`h-5 w-5 ${isActive ? item.color : "text-gray-600"}`} />
+                <div className={`p-0.5 rounded-lg ${isActive ? "bg-primary-100" : "bg-transparent"}`}>
+                  <item.icon className={`h-4 w-4 ${isActive ? item.color : "text-gray-600"}`} />
                 </div>
                 {badgeCount > 0 && (
                   <Badge className="absolute -top-1 -right-1 h-4 w-4 rounded-full p-0 flex items-center justify-center text-xs bg-primary-600 hover:bg-primary-600">
@@ -135,7 +135,7 @@ export function MobileBottomNav({ currentSection, onSectionChange }: MobileBotto
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-gray-200/50 shadow-2xl md:hidden">
       <div className="safe-area-inset-bottom">
-        <div className="grid grid-cols-5 py-0">
+        <div className="grid grid-cols-5 py-0.5">
           {navItems.map((item) => {
             const isActive =
               currentSection === item.id ||
@@ -153,18 +153,18 @@ export function MobileBottomNav({ currentSection, onSectionChange }: MobileBotto
               <button
                 key={item.id}
                 onClick={item.action}
-                className={`flex flex-col items-center justify-center py-2 px-1 relative transition-all duration-300 ${
+                className={`flex flex-col items-center justify-center py-0.5 px-1 relative transition-all duration-300 ${
                   isActive ? "text-primary-600 scale-110" : "text-gray-500 hover:text-primary-500 active:scale-95"
                 }`}
               >
                 <div className={`relative transition-all duration-300 ${isActive ? "transform -translate-y-1" : ""}`}>
-                  <item.icon className={`h-6 w-6 transition-all duration-300 ${isActive ? "scale-110" : ""}`} />
+                  <item.icon className={`h-5 w-5 transition-all duration-300 ${isActive ? "scale-110" : ""}`} />
                   {isActive && (
                     <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary-600 rounded-full animate-pulse"></div>
                   )}
                 </div>
                 <span
-                  className={`text-xs mt-1 font-medium transition-all duration-300 ${
+                  className={`text-xs mt-0.5 font-medium transition-all duration-300 ${
                     isActive ? "text-primary-600 font-semibold" : "text-gray-500"
                   }`}
                 >
