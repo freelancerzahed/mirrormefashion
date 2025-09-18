@@ -13,7 +13,7 @@ export default function HowItWorksSection({ onSectionChange, scrollToSection }: 
   return (
     <section
       id="howItWorksSection"
-      className="min-w-full relative overflow-hidden bg-gradient-to-br from-primary-50 to-white bg-[url('/img/bg-fashion.jpeg')] bg-cover bg-center"
+      className="min-w-full snap-center relative overflow-hidden bg-gradient-to-br from-primary-50 to-white bg-[url('/img/bg-fashion.jpeg')] bg-cover bg-center"
     >
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
@@ -26,7 +26,7 @@ export default function HowItWorksSection({ onSectionChange, scrollToSection }: 
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 lg:py-16 pb-6 sm:pb-16 lg:pb-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 lg:py-16 pb-12 sm:pb-16 lg:pb-20">
         <div className="text-center mb-8 sm:mb-12">
           <div className="inline-flex items-center bg-gradient-to-r from-primary-100 to-primary-50 px-3 py-1.5 rounded-full mb-4 shadow-sm border border-primary-200/50">
             <Brain className="w-4 h-4 mr-2 text-primary-600" />
@@ -126,7 +126,7 @@ export default function HowItWorksSection({ onSectionChange, scrollToSection }: 
           </Button>
           <Button
             size="lg"
-            className="w-full sm:w-56 px-6 py-3 text-base sm:text-lg font-bold rounded-full shadow-2xl transition-all duration-300 group bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white relative overflow-hidden"
+            className="w-full sm:w-56 px-6 py-3 text-base sm:text-lg sm:text-lg md:text-sm font-bold rounded-full shadow-2xl transition-all duration-300 group bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white relative overflow-hidden"
             onClick={() => {
               onSectionChange("professional")
               setTimeout(() => scrollToSection("professionalSection"), 500)
