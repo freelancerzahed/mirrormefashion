@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useRef, useEffect, useCallback } from "react"
@@ -311,8 +310,9 @@ export default function EnhancedChatbot({ onComplete, onReset, isMobile = false 
       setCurrentQuestion(4)
       const firstName = userResponses.name.split(" ")[0]
       return {
-        text: `${firstName}, what is your height? You can use inches (like 64 inches), feet (like 5'9) or centimeters (like 182 cm). Enter your response.`,
-        suggestions: ["5'4\"", "5'6\"", "5'8\"", "165cm", "170cm"]
+        text: `${firstName}, what is your height? You can use inches (like 64 inches), feet (like 5’9) or
+centimeters (like 182 cm). Enter your response. `,
+        suggestions: []
       }
     }
 
@@ -347,10 +347,10 @@ export default function EnhancedChatbot({ onComplete, onReset, isMobile = false 
       if (measurement >= 58 && measurement <= 95) {
         updateUserResponse("height", measurement)
         setCurrentQuestion(5)
-        return {
-          text: "Great! What is your weight in pounds or kilograms. For example, you can say 145lbs or 145 pounds or 85kgs or 85 kilograms.",
-          suggestions: ["120 lbs", "140 lbs", "160 lbs", "60 kg", "70 kg"]
-        }
+return {
+  text: "Great! What is your weight in pounds or kilograms? For example, you can say 145lbs or 145 pounds or 85kgs or 85 kilograms.",
+  suggestions: []
+}
       }
     } catch {
       setShowHeightCalculator(true)
@@ -397,7 +397,7 @@ export default function EnhancedChatbot({ onComplete, onReset, isMobile = false 
     updateUserResponse("bmi", bmi)
     setCurrentQuestion(6)
     return {
-      text: "What is your shoe size in US measurement? I recognize men's, women's and kid's sizes.",
+      text: "What is your shoe size in U.S. measurement? I recognize men’s, women’s and kid’s sizes.",
       suggestions: ["8 women's", "9 women's", "10 men's", "11 men's"]
     }
   }
@@ -450,7 +450,7 @@ export default function EnhancedChatbot({ onComplete, onReset, isMobile = false 
     if (userResponses.gender === "male") {
       setCurrentQuestion(8)
       return {
-        text: "Thanks for your responses. Use the next window to construct a body model that closely resembles your body shape. Click 'Continue' when done.",
+        text: ": Thanks for your responses. Use the next window to construct a body model that closely resembles your body shape. Click ‘Continue’ when done.",
         suggestions: []
       }
     } else if (userResponses.gender === "non-binary") {
@@ -531,10 +531,10 @@ export default function EnhancedChatbot({ onComplete, onReset, isMobile = false 
 
     setTimeout(() => {
       onComplete(updatedResponses)
-    }, 3000)
+    }, 15000)
 
     return {
-      text: "Thanks for your responses. Use the next window to construct a body model that closely resembles your body shape. Click 'Continue' when done.",
+      text: " Thanks for your responses. Use the next window to construct a body model that closely resembles your body shape. Click ‘Continue’ when done.",
       suggestions: []
     }
   }

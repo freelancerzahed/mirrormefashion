@@ -1,7 +1,7 @@
-import {
+import { 
   User, Bell, MessageCircle, ImageIcon, Users, BarChart3, Settings, HelpCircle,
-  MessageSquare, Home, ShoppingBag, Heart, CreditCard, Store, BookOpen, Info,
-  Mail, Shield, FileText, Sparkles
+  MessageSquare, ShoppingBag, Heart, CreditCard, Store, BookOpen, Info,
+  Mail, Shield, FileText, Sparkles, FolderOpen, Film, Video, Clapperboard
 } from "lucide-react"
 
 import type { SidebarSection } from "@/types/main-sidebar"
@@ -13,25 +13,15 @@ export const sidebarData: SidebarSection[] = [
     title: "Quick Access",
     showTitle: true,
     items: [
-      { icon: Home, label: "Dashboard", href: "/dashboard", color: "text-blue-600" },
-      { icon: Bell, label: "Notifications", href: "/notifications", badge: 5, color: "text-orange-600" },
-      { icon: MessageCircle, label: "Messages", href: "/messages", badge: 3, color: "text-green-600" },
-      { icon: MessageCircle, label: "Cart", href: "/cart", custom: true },
+      { icon: Users, label: "Friends", href: "/profile/friends" },
+      { icon: ImageIcon, label: "Media", href: "/profile/media" },
+      { icon: BarChart3, label: "Body Shape", href: "/profile/body-shape" },
+      { icon: Bell, label: "Notifications", href: "/profile/notifications", badge: 5, color: "text-orange-600" },
+      { icon: MessageCircle, label: "Messages", href: "/profile/messages", badge: 3, color: "text-green-600" },
+      { icon: BarChart3, label: "Recommendations", href: "/profile/recommendations" },
     ],
   },
-  {
-    type: "section",
-    title: "Social & Community",
-    icon: Users,
-    color: "text-blue-600",
-    bgColor: "bg-blue-50",
-    collapsible: true,
-    items: [
-      { icon: User, label: "My Profile", href: "/profile" },
-      { icon: Users, label: "All Profiles", href: "/profiles" },
-      { icon: Users, label: "Friends", href: "/friends" },
-    ],
-  },
+  
   {
     type: "section",
     title: "Shopping",
@@ -40,37 +30,46 @@ export const sidebarData: SidebarSection[] = [
     bgColor: "bg-red-50",
     collapsible: true,
     items: [
+      { icon: MessageCircle, label: "Sophia Chat", href: "/sophia-chat" },
       { icon: Store, label: "Shop", href: "/shop" },
-      { icon: ShoppingBag, label: "Products", href: "/products" },
-      { icon: Heart, label: "Wishlist", href: "/wishlist" },
+      { icon: Sparkles, label: "Recommendations", href: "/profile/recommendations" },
+      { icon: Heart, label: "Favorites", href: "/profile/favorites" },
       { icon: CreditCard, label: "Checkout", href: "/checkout" },
     ],
   },
+
   {
     type: "section",
-    title: "Personal Tools",
-    icon: Sparkles,
+    title: "Your Summary",
+    icon: User,
+    color: "text-blue-600",
+    bgColor: "bg-blue-50",
+    collapsible: true,
+    items: [
+      { icon: BarChart3, label: "Shape Summary", href: "/profile/shape-summary" },
+      { icon: Users, label: "Your Body Model", href: "/profile/body-model" },
+      { icon: ShoppingBag, label: "Closet Essentials", href: "/profile/closet-essentials" },
+      { icon: User, label: "Personal Info", href: "/profile/personal-info" },
+      { icon: BookOpen, label: "Blog", href: "/blog" },
+      { icon: FolderOpen, label: "Look Book", href: "/profile/look-book" },
+    ],
+  },
+ 
+  {
+    type: "section",
+    title: "Media",
+    icon: ImageIcon,
     color: "text-purple-600",
     bgColor: "bg-purple-50",
     collapsible: true,
     items: [
-      { icon: ImageIcon, label: "Media", href: "/media" },
-      { icon: BarChart3, label: "Body Shape", href: "/body-shape" },
-      { icon: BarChart3, label: "Recommendations", href: "/recommendations" },
+      { icon: ImageIcon, label: "All Media", href: "/media/all" },
+      { icon: ImageIcon, label: "Images", href: "/media/images" },
+      { icon: Video, label: "Videos", href: "/media/videos" },
+      { icon: Clapperboard, label: "Shorts", href: "/media/shorts" },
     ],
   },
-  {
-    type: "section",
-    title: "Information",
-    icon: BookOpen,
-    color: "text-gray-600",
-    collapsible: true,
-    items: [
-      { icon: BookOpen, label: "Blog", href: "/blog" },
-      { icon: Info, label: "About", href: "/about" },
-      { icon: Mail, label: "Contact", href: "/contact" },
-    ],
-  },
+
   {
     type: "section",
     title: "Support & Settings",
@@ -78,9 +77,9 @@ export const sidebarData: SidebarSection[] = [
     color: "text-gray-600",
     collapsible: true,
     items: [
-      { icon: Settings, label: "Settings", href: "/settings" },
-      { icon: HelpCircle, label: "Help & Support", href: "/help" },
-      { icon: MessageSquare, label: "Send Feedback", href: "/feedback" },
+      { icon: Settings, label: "Settings", href: "/profile/settings" },
+      { icon: HelpCircle, label: "Help & Support", href: "/profile/help" },
+      { icon: MessageSquare, label: "Send Feedback", href: "/profile/feedback" },
     ],
   },
   {

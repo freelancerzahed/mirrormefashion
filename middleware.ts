@@ -9,11 +9,11 @@ export function middleware(req: NextRequest) {
 
   // If user is logged in, block access to `/` and `/login`
   if (token && (pathname === "/" || pathname === "/login")) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+    return NextResponse.redirect(new URL("/profile", req.url));
   }
 
   // If user is NOT logged in, block access to `/dashboard`
-  if (!token && pathname.startsWith("/dashboard")) {
+  if (!token && pathname.startsWith("/profile")) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
@@ -22,5 +22,5 @@ export function middleware(req: NextRequest) {
 
 // ✅ Apply middleware to specific routes
 export const config = {
-  matcher: ["/", "/login", "/dashboard/:path*"],
+  matcher: ["/", "/login", "/profile/:path*"],
 };

@@ -35,4 +35,3 @@ export function formatLabel(text: string): string {
 
   return result;
 }
-

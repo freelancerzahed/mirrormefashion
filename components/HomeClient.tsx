@@ -247,7 +247,7 @@ export default function HomeClient({ products }: Props) {
     dispatch({ type: "setUserResponses", payload: responses });
     dispatch({ type: "setShowBodyModeler", payload: true });
     setCurrentSection("bodyModeler");
-    setTimeout(() => scrollToSection("bodyModelerSection"), 1000);
+    setTimeout(() => scrollToSection("bodyModelerSection"), 150000);
   };
 
   const handleChatbotReset = () => {
@@ -324,7 +324,7 @@ const handleRegistrationSubmit = async (formData: any) => {
 
   return (
     <div className="overflow-hidden h-screen">
-      <Navigation />
+      <Navigation scrollToSection={scrollToSection}  />
 
       <div className="h-[calc(100vh)]">
         {/* Mobile-First Native App Design */}

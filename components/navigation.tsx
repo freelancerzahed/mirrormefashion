@@ -29,8 +29,10 @@ import { navigationItems, sidebarData, socialLinks } from "@/lib/data/navigation
 import { TopBar } from "@/components/navigation/top-bar";
 import { MobileMenuContent } from "@/components/navigation/mobile-menu";
 import { useUserContext } from '@/contexts/UserContext';
-
-export default function Navigation() {
+type NavigationProps = {
+  scrollToSection: (sectionId: string) => void;
+};
+export default function Navigation({ scrollToSection }: NavigationProps) {
   const pathname = usePathname();
   const isHome = pathname === '/';
 
@@ -148,8 +150,8 @@ export default function Navigation() {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/dashboard" className="cursor-pointer">
-              Dashboard
+            <Link href="/profile" className="cursor-pointer">
+              Profile
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
@@ -306,8 +308,8 @@ export default function Navigation() {
                 >
                   <Link href="/login">Sign In</Link>
                 </Button>
-                <Button size="sm" asChild className="bg-red-600 hover:bg-red-700 text-white">
-                  <Link href="/register">Get Started</Link>
+                <Button size="sm" onClick={() => scrollToSection("howItWorksSection")} className="bg-red-600 hover:bg-red-700 text-white">
+                <span>Get Started</span>
                 </Button>
               </div>
             )}

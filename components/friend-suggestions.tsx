@@ -33,7 +33,7 @@ export default function FriendSuggestions({ onAddFriend }: FriendSuggestionsProp
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle className="text-lg font-semibold">Friend Suggestions</CardTitle>
       </CardHeader>
@@ -56,7 +56,7 @@ export default function FriendSuggestions({ onAddFriend }: FriendSuggestionsProp
               <Button
                 size="sm"
                 onClick={() => handleAddFriendClick(suggestion.id)}
-                className="shrink-0 bg-primary-600 hover:bg-primary-700 text-xs sm:text-sm px-2 sm:px-3"
+                className="shrink-0 bg-primary-600 hover:bg-primary-700 text-xs sm:text-sm  text-white px-2 sm:px-3"
               >
                 Add
               </Button>

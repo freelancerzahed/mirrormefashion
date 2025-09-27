@@ -30,7 +30,7 @@ export function TopBar({ showTopBar, setShowTopBar }: TopBarProps) {
           {/* Center - Company Name */}
           <div className="flex-1 text-center md:flex-none">
             <span className="font-bold text-lg tracking-wide">
-              MIRRORME FASHION <sup className="text-xs font-normal">BETA</sup>
+            Mirror Me Fashion <sup className="text-xs font-normal">BETA</sup>
             </span>
           </div>
 

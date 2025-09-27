@@ -3,8 +3,8 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Brain, Users, Sparkles, Zap, ArrowRight } from "lucide-react"
-import Image from "next/image"
 
+import Image from "next/image"
 interface HowItWorksSectionProps {
   onSectionChange: (section: string) => void
   scrollToSection: (sectionId: string) => void
@@ -14,21 +14,22 @@ export default function HowItWorksSection({ onSectionChange, scrollToSection }: 
   return (
     <section
       id="howItWorksSection"
-      className="min-w-full snap-center relative overflow-hidden flex items-center justify-center min-h-screen"
+      className="min-w-full snap-center relative overflow-hidden pt-5"
     >
-      {/* Background Image */}
-      <Image
-        src="/img/bg-fashion.jpeg"
-        alt="Fashion model"
-        fill
-        className="object-cover scale-105 transition-transform duration-[20s] ease-linear hover:scale-110"
-        priority
-      />
-      {/* Dark overlay for text contrast */}
-       <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-primary-900/60 to-primary-800/80"></div>
+      {/* Background Image with Blur */}
+       <Image
+               src="/img/bg-fashion.jpeg"
+               alt="Fashion model"
+               fill
+               className="object-cover scale-105 transition-transform duration-[20s] ease-linear hover:scale-110"
+               priority
+             />
+             <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-primary-900/60 to-primary-800/80"></div>
+     
+
       {/* Main Content */}
-      <div className="relative z-10 w-full max-w-7xl px-4 sm:px-6 py-8 sm:py-12 lg:py-16">
-        <div className="text-center mb-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 lg:py-16 pb-12 sm:pb-16 lg:pb-20">
+       <div className="text-center mb-8">
           <div className="inline-flex items-center bg-gradient-to-r from-primary-100 to-primary-50 px-3 py-1.5 rounded-full mb-4 shadow-sm border border-primary-200/50">
             <Brain className="w-4 h-4 mr-2 text-primary-600" />
             <span className="text-xs font-bold text-primary-700 uppercase tracking-wider">
@@ -36,18 +37,15 @@ export default function HowItWorksSection({ onSectionChange, scrollToSection }: 
             </span>
           </div>
 
-          <h2 className="text-2xl lg:text-4xl font-black mb-3 leading-tight tracking-tight">
-            <span className="block text-white">
-              How the Mirror Me Fashion AI Fashion
-            </span>
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-pink-400 to-red-300">
+          <h2 className="text-2xl lg:text-4xl font-black text-gray-900 mb-3 leading-tight tracking-tight">
+             How the Mirror Me Fashion AI Fashion 
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary-600 via-primary-500 to-primary-400">
               Advisor Works
             </span>
           </h2>
 
-          <p className="text-base lg:text-lg text-gray-200 max-w-3xl mx-auto leading-relaxed font-medium">
-            Revolutionary AI technology that learns your body type and style preferences to deliver free personalized
-            fashion advice with unprecedented accuracy.
+          <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed font-medium">
+          Revolutionary AI technology that learns your body type and style preferences to deliver free personalized fashion advice with unprecedented accuracy.
           </p>
         </div>
 
@@ -67,8 +65,7 @@ export default function HowItWorksSection({ onSectionChange, scrollToSection }: 
             </CardHeader>
             <CardContent className="relative z-10 px-4 pb-6">
               <p className="text-gray-800 text-sm leading-relaxed font-medium">
-                Our advanced AI analyzes your measurements and style goals through conversation with the Virtual Fashion
-                Stylist (Sophia) to understand your fashion needs with scientific precision.
+                Our advanced AI analyzes your measurements and style goals through conversation with the Virtual Fashion Stylist (Sophia) to understand your fashion needs with scientific precision.
               </p>
             </CardContent>
           </Card>
@@ -87,8 +84,7 @@ export default function HowItWorksSection({ onSectionChange, scrollToSection }: 
             </CardHeader>
             <CardContent className="relative z-10 px-4 pb-6">
               <p className="text-gray-800 text-sm leading-relaxed font-medium">
-                Share your style preferences and budget with Sophia within the chat to access free and accurate fashion
-                advice using natural conversation.
+                Share your style preferences and budget with Sophia within the chat to access free and accurate fashion advice using natural conversation.
               </p>
             </CardContent>
           </Card>
@@ -107,15 +103,14 @@ export default function HowItWorksSection({ onSectionChange, scrollToSection }: 
             </CardHeader>
             <CardContent className="relative z-10 px-4 pb-6">
               <p className="text-gray-800 text-sm leading-relaxed font-medium">
-                Receive curated fashion recommendations that fit and enhance your body type. Access product suggestions
-                from fashion sellers across the globe.
+                Receive curated fashion recommendations that fit and enhance your body type. Access product suggestions from fashion sellers across the globe.
               </p>
             </CardContent>
           </Card>
         </div>
 
         {/* Buttons */}
-        <div className="text-center flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 px-4">
+        <div className="text-center flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 px-4 pb-16 sm:pb-12 lg:pb-8">
           <Button
             size="lg"
             className="w-full sm:w-80 px-6 py-3 text-base sm:text-lg font-bold rounded-full shadow-2xl transition-all duration-300 group bg-red-500 hover:bg-red-600 text-white relative overflow-hidden"
@@ -127,17 +122,20 @@ export default function HowItWorksSection({ onSectionChange, scrollToSection }: 
             I’m a Shopper
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Button>
-          <Button
-            size="lg"
-            className="w-full sm:w-80 px-6 py-3 text-base sm:text-lg font-bold rounded-full shadow-2xl transition-all duration-300 group bg-purple-500 hover:bg-purple-600 text-white relative overflow-hidden"
-            onClick={() => {
-              onSectionChange("professional")
-              setTimeout(() => scrollToSection("professionalSection"), 500)
-            }}
-          >
-            I'm a Fashion Professional
-            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Button>
+       <Button
+         size="lg"
+         className="w-full sm:w-80 px-6 py-3 text-base sm:text-lg font-bold rounded-full shadow-2xl transition-all duration-300  group
+                    bg-purple-500 hover:bg-purple-600
+                    text-white relative overflow-hidden"
+         onClick={() => {
+           onSectionChange("professional")
+           setTimeout(() => scrollToSection("professionalSection"), 500)
+         }}
+       >
+         I'm a Fashion Professional
+           <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+       </Button>
+
         </div>
       </div>
     </section>

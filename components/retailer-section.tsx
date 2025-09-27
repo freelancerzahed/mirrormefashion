@@ -92,24 +92,6 @@ export default function RetailerSection({ isMobile }: RetailerSectionProps) {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Business Type</label>
-                  <select className="w-full px-4 py-3 border-2 border-gray-200 rounded-3xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 shadow-sm">
-                    <option>Select business type</option>
-                    <option>Online Fashion Store</option>
-                    <option>Physical Retail Store</option>
-                    <option>Fashion Brand</option>
-                    <option>Department Store</option>
-                    <option>Boutique</option>
-                  </select>
-                </div>
-
-                <div className="flex items-center space-x-3 bg-gray-50 p-4 rounded-3xl">
-                  <Checkbox id="mobile-retailer-terms" />
-                  <label htmlFor="mobile-retailer-terms" className="text-sm text-gray-700 font-medium">
-                    I agree to the Terms and Privacy Policy
-                  </label>
-                </div>
 
                 <Button className="w-full bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white py-3 text-base font-semibold rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 border-0">
                   Submit Application

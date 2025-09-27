@@ -1,14 +1,16 @@
 import type { Metadata } from "next"
 import "./globals.css"
-import { Mona_Sans as FontSans } from "next/font/google"
+import { Roboto } from "next/font/google"
 import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 import Providers from "./providers"
 
-const fontSans = FontSans({
+// Load Roboto from Google Fonts
+const fontSans = Roboto({
   subsets: ["latin"],
   variable: "--font-sans",
+  weight: ["400", "500", "700"], // optional: define font weights you need
 })
 
 export const metadata: Metadata = {
@@ -26,9 +28,17 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable
+        )}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           <Providers>{children}</Providers>
           <Toaster />
         </ThemeProvider>

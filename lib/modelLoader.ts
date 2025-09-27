@@ -5,10 +5,10 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 
 interface ModelLoaderResult {
-  scene?: THREE.Scene;
-  model?: THREE.Object3D;
-  renderer?: THREE.WebGLRenderer;
-  loadPromise: Promise<void>;
+  scene: THREE.Scene;
+  model: THREE.Object3D | null; // model starts null until loadPromise resolves
+  renderer: THREE.WebGLRenderer;
+  loadPromise: Promise<THREE.Object3D>;
   dispose: () => void;
 }
 
@@ -20,9 +20,12 @@ export function modelLoader(
 ): ModelLoaderResult {
   if (!canvas) {
     return {
+      scene: new THREE.Scene(),
+      model: null,
+      renderer: new THREE.WebGLRenderer(),
       dispose: () => {},
-      loadPromise: Promise.resolve(),
-    } as ModelLoaderResult;
+      loadPromise: Promise.reject("No canvas provided"),
+    };
   }
 
   // Renderer
@@ -93,62 +96,75 @@ export function modelLoader(
       newMat.normalScale = new THREE.Vector2(1, 1);
     }
 
-    if (isPrincipled && mat.specular !== undefined)
+    if (isPrincipled && mat.specular !== undefined) {
       newMat.roughness = 1 - mat.specular * 0.8;
+    }
 
     newMat.needsUpdate = true;
     return newMat;
   };
 
-  let model: THREE.Object3D | undefined;
+  let model: THREE.Object3D | null = null;
 
   const loader = new GLTFLoader();
   loader.setMeshoptDecoder(MeshoptDecoder);
 
-  const loadPromise = new Promise<void>((resolve, reject) => {
-    loader.load(
-      modelUrl,
-      (gltf) => {
-        model = gltf.scene;
+  const loadPromise: Promise<THREE.Object3D> = new Promise(
+    (resolve, reject) => {
+      loader.load(
+        modelUrl,
+        (gltf) => {
+          model = gltf.scene;
 
-        model.traverse((obj) => {
-          if (obj instanceof THREE.Mesh) {
-            obj.material = Array.isArray(obj.material)
-              ? obj.material.map(enhanceMaterial)
-              : enhanceMaterial(obj.material);
-            obj.castShadow = true;
-            obj.receiveShadow = true;
+          if (model) {
+            model.traverse((obj) => {
+              if (obj instanceof THREE.Mesh) {
+                obj.material = Array.isArray(obj.material)
+                  ? obj.material.map(enhanceMaterial)
+                  : enhanceMaterial(obj.material);
+                obj.castShadow = true;
+                obj.receiveShadow = true;
+              }
+            });
           }
-        });
 
-        model.scale.set(scaleFactor, scaleFactor, scaleFactor);
+          if (model) {
+            model.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
-        const box = new THREE.Box3().setFromObject(model);
-        const center = box.getCenter(new THREE.Vector3());
-        model.position.sub(center);
+            const box = new THREE.Box3().setFromObject(model);
+            const center = box.getCenter(new THREE.Vector3());
+            model.position.sub(center);
 
-        scene.add(model);
+            scene.add(model);
+          }
 
-        const rotationBtn = document.getElementById(rotationButtonId);
-        if (rotationBtn) {
-          const angles = [0, -Math.PI / 2, Math.PI];
-          let index = 0;
-          rotationBtn.addEventListener("click", () => {
-            index = (index + 1) % angles.length;
-            model!.rotation.y = angles[index];
-          });
-        }
+          const rotationBtn = document.getElementById(rotationButtonId);
+          if (rotationBtn) {
+            const angles = [0, -Math.PI / 2, Math.PI];
+            let index = 0;
+            rotationBtn.addEventListener("click", () => {
+              if (model) {
+                index = (index + 1) % angles.length;
+                model.rotation.y = angles[index];
+              }
+            });
+          }
 
-        resolve();
-      },
-      (progress) => {
-        console.log(
-          `Loading: ${((progress.loaded / progress.total) * 100).toFixed(1)}%`
-        );
-      },
-      (err) => reject(err)
-    );
-  });
+          if (model) {
+            resolve(model);
+          } else {
+            reject(new Error("Failed to load model: gltf.scene is null"));
+          }
+        },
+        (progress) => {
+          console.log(
+            `Loading: ${((progress.loaded / progress.total) * 100).toFixed(1)}%`
+          );
+        },
+        (err) => reject(err)
+      );
+    }
+  );
 
   const handleResize = () => {
     aspect = canvas.clientWidth / canvas.clientHeight;

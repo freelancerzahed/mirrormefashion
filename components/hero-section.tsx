@@ -40,7 +40,7 @@ export default function HeroSection({ scrollToSection }: HeroSectionProps) {
               <span className="text-sm font-semibold tracking-wide">Meet the First and Only Virtual Fashion Stylist</span>
             </div>
 
-            <h1 className="text-5xl lg:text-8xl font-black mb-4 leading-tight tracking-tight">
+            <h1 className="text-5xl lg:text-5xl font-black mb-4 leading-tight tracking-tight">
               Meet the First and Only
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-yellow-400 to-pink-400 animate-gradient-x">
                 Virtual Fashion Stylist
