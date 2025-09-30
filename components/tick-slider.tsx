@@ -94,11 +94,11 @@ export const TickSlider = memo(function TickSlider({
           disabled={disabled} 
         />
       </div>
-      <div className="slider-value-display">
+      {/* <div className="slider-value-display">
         <span className="text-xs text-gray-500">{min}</span>
         <span className="text-xs font-medium text-red-600">{value.toFixed(1)}"</span>
         <span className="text-xs text-gray-500">{max}</span>
-      </div>
+      </div> */}
 
       <style jsx>{`
         .slider-container { width: 100%; margin: 0.5rem 0; box-sizing: border-box; }

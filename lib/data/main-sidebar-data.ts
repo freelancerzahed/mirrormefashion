@@ -30,7 +30,7 @@ export const sidebarData: SidebarSection[] = [
     bgColor: "bg-red-50",
     collapsible: true,
     items: [
-      { icon: MessageCircle, label: "Sophia Chat", href: "/sophia-chat" },
+      { icon: MessageCircle, label: "Sophia Chat", href: "/profile/help" },
       { icon: Store, label: "Shop", href: "/shop" },
       { icon: Sparkles, label: "Recommendations", href: "/profile/recommendations" },
       { icon: Heart, label: "Favorites", href: "/profile/favorites" },

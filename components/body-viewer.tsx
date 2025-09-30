@@ -498,9 +498,9 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
                             <label className="text-sm font-medium text-gray-700 capitalize" htmlFor={`slider-${mKey}`}>
                               {formatLabel(mKey)}
                             </label>
-                            <Badge variant="outline" className="text-xs bg-red-50 text-red-600 border-red-200">
+                            {/* <Badge variant="outline" className="text-xs bg-red-50 text-red-600 border-red-200">
                               {measurements[mKey] ?? "--"}
-                            </Badge>
+                            </Badge> */}
                           </div>
                           <TickSlider
                             id={`slider-${mKey}`}

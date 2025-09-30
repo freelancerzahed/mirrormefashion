@@ -9,6 +9,7 @@ import QuickAccessSection from "./quick-access-section"
 import CollapsibleSection from "./collapsible-section"
 import LegalSection from "./legal-section"
 import { sidebarData } from "@/lib/data/main-sidebar-data"
+import Link from "next/link"
 
 export default function Sidebar({
   user,
@@ -44,24 +45,29 @@ export default function Sidebar({
         {/* Header */}
         <div className="flex-shrink-0 p-3 border-b border-gray-100">
           <div className="flex items-center justify-between">
-            {!sidebarCollapsed && (
-              <div className="flex items-center gap-2 min-w-0 flex-1">
-                <Avatar className="h-8 w-8 flex-shrink-0 ring-2 ring-red-100">
-                  <AvatarImage src={user?.avatar || "/placeholder.svg"} />
-                  <AvatarFallback className="bg-red-100 text-red-700 text-xs font-medium">
-                    {user?.name?.charAt(0) || user?.email?.charAt(0) || "U"}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="min-w-0 flex-1">
-                  <h3 className="font-medium text-sm text-gray-900 truncate">
-                    {user?.name || `${user?.firstName || ""} ${user?.lastName || ""}`.trim() || "User"}
-                  </h3>
-                  <p className="text-xs text-gray-500 truncate">
-                    @{user?.username || user?.email?.split("@")[0] || "user"}
-                  </p>
-                </div>
-              </div>
-            )}
+         {!sidebarCollapsed && (
+        <Link
+          href="/profile"
+          className="flex items-center gap-2 min-w-0 flex-1 cursor-pointer hover:bg-gray-50 rounded-md p-1"
+        >
+          <Avatar className="h-8 w-8 flex-shrink-0 ring-2 ring-red-100">
+            <AvatarImage src={user?.avatar || "/placeholder.svg"} />
+            <AvatarFallback className="bg-red-100 text-red-700 text-xs font-medium">
+              {user?.name?.charAt(0) || user?.email?.charAt(0) || "U"}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0 flex-1">
+            <h3 className="font-medium text-sm text-gray-900 truncate">
+              {user?.name ||
+                `${user?.firstName || ""} ${user?.lastName || ""}`.trim() ||
+                "User"}
+            </h3>
+            <p className="text-xs text-gray-500 truncate">
+              @{user?.username || user?.email?.split("@")[0] || "user"}
+            </p>
+          </div>
+        </Link>
+      )}
             <Button
               variant="ghost"
               size="icon"
