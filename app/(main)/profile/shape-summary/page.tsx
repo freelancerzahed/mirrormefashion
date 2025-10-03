@@ -3,17 +3,12 @@
 import { useRef, useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-<<<<<<< HEAD
-import { User, Eye, EyeOff, RotateCcw, Info } from "lucide-react"
-import { modelLoader } from "@/lib/modelLoader"
-=======
 import { User, Eye, EyeOff, RotateCcw, Info, Shirt, ArrowLeftRight } from "lucide-react"
 import { modelLoader } from "@/lib/modelLoader"
 import FriendSuggestions from "@/components/friend-suggestions"
 import AiAssistant from "@/components/ai-assistant"
 import InfoCard from "@/components/shape-summary/InfoCard"
 import ClosetItemCard from "@/components/shape-summary/ClosetItemCard"
->>>>>>> 9098284 (body data update backend added)
 
 // Mock user data
 const mockUserData = {
@@ -63,14 +58,9 @@ export default function ShapeSummaryPage() {
       try {
         const res = await fetch(`/api/body-data`)
         const data = await res.json()
-<<<<<<< HEAD
-        if (data.success && data.shapeKeys) {
-          setShapeKeys(data.shapeKeys)
-=======
         console.log("Shape keys fetched:", data)
         if (data.success && data.data.shape_keys) {
           setShapeKeys(data.data.shape_keys)
->>>>>>> 9098284 (body data update backend added)
         } else {
           setShapeKeys({ Waist_Small: 0.4, Hips_Wide: 0.6 }) // fallback dummy keys
         }
@@ -87,13 +77,9 @@ export default function ShapeSummaryPage() {
   // Apply shape keys
   const updateModelWithShapeKeys = (keys: Record<string, number>) => {
     if (!modelRef.current || !THREE) return
-<<<<<<< HEAD
-    modelRef.current.traverse((child: any) => {
-=======
     // Access the actual model through the scene's modelReference property
     const model = (modelRef.current as any).modelReference || modelRef.current;
     model.traverse((child: any) => {
->>>>>>> 9098284 (body data update backend added)
       if (!(child instanceof THREE.Mesh)) return
       if (!child.morphTargetDictionary || !child.morphTargetInfluences) return
       Object.entries(keys).forEach(([key, value]) => {
@@ -111,12 +97,6 @@ export default function ShapeSummaryPage() {
     if (!canvasRef.current || !THREE) return
 
     const modelPath = "/models/female_average.glb"
-<<<<<<< HEAD
-    const { dispose, loadPromise, scene } = modelLoader(canvasRef.current, modelPath, 1.0, "bodyRearBtn")
-
-    loadPromise
-      ?.then(() => {
-=======
     const { dispose, loadPromise, scene } = modelLoader(
       canvasRef.current,
       modelPath,
@@ -126,19 +106,15 @@ export default function ShapeSummaryPage() {
 
     loadPromise
       ?.then((model) => {
->>>>>>> 9098284 (body data update backend added)
         if (!scene) return
         modelRef.current = scene
         setModelLoaded(true)
         updateModelWithShapeKeys(shapeKeys) // apply once loaded
-<<<<<<< HEAD
-=======
         
         // Store model reference for rotation
         if (model) {
           (scene as any).modelReference = model;
         }
->>>>>>> 9098284 (body data update backend added)
       })
       .catch((err) => console.error("Failed to load model:", err))
 
@@ -150,14 +126,6 @@ export default function ShapeSummaryPage() {
     if (!modelLoaded) return
     updateModelWithShapeKeys(shapeKeys)
   }, [shapeKeys, modelLoaded])
-<<<<<<< HEAD
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-stone-50 to-stone-100">
-      <div className="max-w-7xl mx-auto p-4 lg:p-8">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {/* Left Column: Model */}
-=======
   
   // Handle rotation button click
   const handleRotateView = () => {
@@ -254,7 +222,6 @@ export default function ShapeSummaryPage() {
             </div>
           </div>
           {/* Right Column: Model */}
->>>>>>> 9098284 (body data update backend added)
           <div className="lg:col-span-3">
             <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg sticky top-8">
               <CardHeader className="pb-4 flex justify-between items-center">
@@ -262,16 +229,6 @@ export default function ShapeSummaryPage() {
                   <CardTitle className="flex items-center gap-2">
                     <User className="w-5 h-5 text-red-600" /> Your Body Model
                   </CardTitle>
-<<<<<<< HEAD
-                  <CardDescription>3D visualization of your measurements</CardDescription>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="sm" onClick={() => setShowMeasurements(!showMeasurements)}>
-                    {showMeasurements ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <RotateCcw className="w-4 h-4" />
-=======
                   <CardDescription>
                     3D visualization of your measurements
                   </CardDescription>
@@ -284,18 +241,11 @@ export default function ShapeSummaryPage() {
                     onClick={handleRotateView}
                   >
                     <ArrowLeftRight className="w-4 h-4" />
->>>>>>> 9098284 (body data update backend added)
                   </Button>
                 </div>
               </CardHeader>
               <CardContent>
                 <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl p-4 min-h-[400px] h-[600px] flex items-center justify-center relative">
-<<<<<<< HEAD
-                  <canvas ref={canvasRef} className="w-full h-auto max-w-sm mx-auto" style={{ minHeight: "500px" }} />
-                  {!THREE && <p className="absolute text-gray-500">Loading 3D engine...</p>}
-                  {THREE && !modelLoaded && <p className="absolute text-gray-500">3D model is loading...</p>}
-                  {THREE && modelLoaded && loadingKeys && <p className="absolute text-gray-500">Applying shape keys...</p>}
-=======
                   <canvas
                     ref={canvasRef}
                     className="w-full h-auto max-w-sm mx-auto"
@@ -314,7 +264,6 @@ export default function ShapeSummaryPage() {
                       Applying shape keys...
                     </p>
                   )}
->>>>>>> 9098284 (body data update backend added)
                 </div>
                 <div className="mt-4 flex justify-center">
                   <Button
@@ -328,27 +277,7 @@ export default function ShapeSummaryPage() {
             </Card>
           </div>
 
-<<<<<<< HEAD
-          {/* Right Column: Shape Summary */}
-          <div className="lg:col-span-2 space-y-8">
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle>Shape Summary</CardTitle>
-                <CardDescription>{mockUserData.shapeSummary}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <p><strong>Shape Classification:</strong> {mockUserData.shapeClassification}</p>
-                  <p><strong>Age Range:</strong> {mockUserData.ageRange}</p>
-                  <p><strong>Gender:</strong> {mockUserData.gender}</p>
-                  <p><strong>BMI:</strong> {mockUserData.bmi}</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-=======
          
->>>>>>> 9098284 (body data update backend added)
         </div>
       </div>
     </div>

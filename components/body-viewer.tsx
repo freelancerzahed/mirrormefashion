@@ -50,11 +50,8 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [trimesterEnabled, setTrimesterEnabled] = useState(false)
   const [THREE, setTHREE] = useState<any>(null)
-<<<<<<< HEAD
-=======
   // Generate unique ID for the rotation button to avoid conflicts
   const uniqueId = `bodyRearBtn-${Math.random().toString(36).substr(2, 9)}`;
->>>>>>> 9098284 (body data update backend added)
   
   const genderConfig: GenderConfig = createGenderConfig(userResponses.gender)
   const [alphaCode, setAlphaCode] = useState<string>("")
@@ -86,11 +83,7 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
     else if (userResponses.bodyType === "athletic")
       modelPath = userResponses.gender === "male" ? "/models/male_athletic.glb" : "/models/female_athletic.glb"
 
-<<<<<<< HEAD
-    const { dispose, loadPromise, scene, model } = modelLoader(canvasRef.current, modelPath, 1.0, "bodyRearBtn")
-=======
     const { dispose, loadPromise, scene, model } = modelLoader(canvasRef.current, modelPath, 1.0, uniqueId)
->>>>>>> 9098284 (body data update backend added)
     sceneRef.current.scene = scene
     sceneRef.current.model = model
 
@@ -409,11 +402,7 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
             <div className="grid grid-cols-2 gap-2">
               <Button
                 variant="outline"
-<<<<<<< HEAD
-                id="bodyRearBtn"
-=======
                 id={uniqueId}
->>>>>>> 9098284 (body data update backend added)
                 className="flex-1 h-12 bg-transparent border-red-200 text-red-600 hover:bg-red-50"
               >
                 <RotateCcw className="w-4 h-4 mr-2" /> Body Rear
@@ -542,11 +531,7 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
                 variant="outline"
                 size="sm"
                 className="flex-1 h-12 bg-transparent border-red-200 text-red-600 hover:bg-red-50"
-<<<<<<< HEAD
-                id="bodyRearBtn"
-=======
                 id={uniqueId}
->>>>>>> 9098284 (body data update backend added)
               >
                 <RotateCcw className="w-4 h-4 mr-2" /> Body Rear
               </Button>
@@ -562,11 +547,7 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
 
         {/* RIGHT PANEL (Viewer) */}
         <div className="flex-1 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center h-full">
-<<<<<<< HEAD
-          <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-lg w-full mx-4">
-=======
           <div className="bg-white rounded-2xl shadow-2xl p-6 w-full mx-4">
->>>>>>> 9098284 (body data update backend added)
             <div className="text-center mb-4">
               <h2 className="text-xl font-bold text-gray-900 mb-2">Your Body Model</h2>
               <Badge variant="secondary" className="bg-gradient-to-r from-red-100 to-red-100 text-red-600">

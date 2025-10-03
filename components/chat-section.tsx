@@ -70,71 +70,6 @@ export default function ChatSection({
 
       {/* Fixed height container for desktop chat */}
       <div className="relative z-10 h-full flex items-center justify-center px-6 py-8 min-h-0">
-<<<<<<< HEAD
-        <div className="max-w-7xl w-full mx-auto grid lg:grid-cols-[1fr_2fr] gap-6 items-center h-full min-h-0">
-          {/* Left: List View */}
-          <div className="space-y-6">
-            {/* Centered Header */}
-            <div className="text-left">
-              <h2 className="text-primary-600 font-semibold text-base mb-2">
-                AI-Powered Analysis
-              </h2>
-              <h1 className="text-3xl font-extrabold text-gray-900 mb-2">
-                ShapeMe<sup>®</sup>
-              </h1>
-              <h2 className="text-xl font-bold text-primary-600 mb-2">
-                Body Modeler
-              </h2>
-              <p className="text-gray-700 font-medium">by Mirror Me Fashion</p>
-            </div>
-
-            {/* Feature List */}
-            <div className="space-y-4">
-              {/* Beta Launch */}
-              <div className="flex items-center p-4 rounded-xl bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-200 shadow-sm hover:shadow-md transition">
-                <TrendingUp className="w-6 h-6 text-purple-500 mr-3" />
-                <p className="text-sm font-medium">
-                  <span className="font-bold text-purple-600">Beta Launch:</span>{" "}
-                  Welcome to Mirror Me Fashion Beta! Join today to access free
-                  styling help for your unique body type
-                </p>
-              </div>
-
-              {/* World’s First AI Stylist */}
-              <div className="flex items-center p-4 rounded-xl bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-200 shadow-sm hover:shadow-md transition">
-                <CheckCircle className="w-6 h-6 text-green-500 mr-3" />
-                <p className="text-sm font-medium">
-                  <span className="font-bold text-green-600">
-                    World’s First AI Stylist:
-                  </span>{" "}
-                  Get free & instant fashion advice from the world’s first and
-                  only virtual fashion stylist
-                </p>
-              </div>
-
-              {/* Global Shopping */}
-              <div className="flex items-center p-4 rounded-xl bg-gradient-to-r from-blue-500/10 to-primary-500/10 border border-blue-200 shadow-sm hover:shadow-md transition">
-                <Globe className="w-6 h-6 text-blue-500 mr-3" />
-                <p className="text-sm font-medium">
-                  <span className="font-bold text-blue-600">
-                    Global Shopping:
-                  </span>{" "}
-                  Shop fashion retailers across the globe with personalized
-                  recommendations
-                </p>
-              </div>
-
-              {/* AI-Powered Insights */}
-              <div className="flex items-center p-4 rounded-xl bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-200 shadow-sm hover:shadow-md transition">
-                <Rocket className="w-6 h-6 text-orange-500 mr-3" />
-                <p className="text-sm font-medium">
-                  <span className="font-bold text-orange-600">
-                    AI-Powered Insights:
-                  </span>{" "}
-                  Grow followers & monetize your brand with AI-powered insights
-                  and advanced analytics
-                </p>
-=======
         <div className="max-w-7xl w-full mx-auto grid lg:grid-cols-[1.5fr_2fr] gap-8 items-center h-full min-h-0">
           {/* Left: List View */}
           <div className="space-y-6 relative">
@@ -215,7 +150,6 @@ export default function ChatSection({
                     </p>
                   </div>
                 </div>
->>>>>>> 9098284 (body data update backend added)
               </div>
             </div>
           </div>
