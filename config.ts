@@ -1,5 +1,5 @@
 
-export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost/mirrormefashion/api/v2"
+export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://mirrormefashion.com/api/v2"
 
 
 
