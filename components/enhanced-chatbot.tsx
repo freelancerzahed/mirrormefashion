@@ -531,7 +531,11 @@ return {
 
     setTimeout(() => {
       onComplete(updatedResponses)
+<<<<<<< HEAD
     }, 15000)
+=======
+    }, 500)
+>>>>>>> 9098284 (body data update backend added)
 
     return {
       text: " Thanks for your responses. Use the next window to construct a body model that closely resembles your body shape. Click ‘Continue’ when done.",

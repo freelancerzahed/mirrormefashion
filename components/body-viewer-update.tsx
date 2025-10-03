@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { User, RotateCcw, ArrowRight, Eye, EyeOff, Zap, RefreshCw, ChevronDown } from "lucide-react"
+import { User, ArrowLeftRight, ArrowRight, Eye, EyeOff, Zap, RefreshCw, ChevronDown } from "lucide-react"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { TickSlider } from "@/components/tick-slider"
 import { createGenderConfig, type GenderConfig, type ShapeKeyConfig } from "@/lib/data/body-groups"
@@ -22,13 +22,16 @@ import { calculateTrapezoid } from "@/lib/utils/calculateTrapezoid"
 import { generateAlphanumericCode, type ShapeKeys } from "@/lib/utils/bodyCodeGenerator"
 import { applyFemaleSkinny } from "@/lib/utils/femaleSkinny"
 import { formatLabel } from "@/lib/utils"
+import { toast } from "@/hooks/use-toast"
 
-interface BodyViewerProps {
+interface BodyViewerUpdateProps {
   userResponses: {
     name: string
     age_range: string
     bodyType?: string
     gender: "male" | "female"
+    shape_keys?: Record<string, number>
+    slider_values?: Record<string, number>
   }
   onComplete: (data: {
     shape: string
@@ -43,26 +46,53 @@ interface MeasurementsState {
   [key: string]: number
 }
 
-export default function BodyViewer({ userResponses, onComplete, onChange }: BodyViewerProps) {
+export default function BodyViewerUpdate({ userResponses, onComplete, onChange }: BodyViewerUpdateProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const sceneRef = useRef<{ scene?: any; model?: any }>({})
   const isMobile = useIsMobile()
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [trimesterEnabled, setTrimesterEnabled] = useState(false)
   const [THREE, setTHREE] = useState<any>(null)
-<<<<<<< HEAD
-=======
   // Generate unique ID for the rotation button to avoid conflicts
   const uniqueId = `bodyRearBtn-${Math.random().toString(36).substr(2, 9)}`;
->>>>>>> 9098284 (body data update backend added)
   
   const genderConfig: GenderConfig = createGenderConfig(userResponses.gender)
   const [alphaCode, setAlphaCode] = useState<string>("")
   const [shapeKeysState, setShapeKeysState] = useState<ShapeKeys>({} as ShapeKeys)
-  const [measurements, setMeasurements] = useState<MeasurementsState>(() => createDefaultValues(genderConfig))
+  // Use slider_values from userResponses as initial values, fallback to default if not provided
+  const [measurements, setMeasurements] = useState<MeasurementsState>(() => {
+    const defaults = createDefaultValues(genderConfig)
+    if (userResponses.slider_values) {
+      // Merge the defaults with the provided slider values
+      return { ...defaults, ...userResponses.slider_values }
+    }
+    return defaults
+  })
+  
+  // Store previous slider values to prevent infinite loops
+  const prevSliderValuesRef = useRef<string>("")
+  
   // NEW: Store initial shape keys for reset
   const initialShapeKeysRef = useRef<ShapeKeys>({} as ShapeKeys)
 
+  // Apply shape keys to model
+  const updateModelWithShapeKeys = (keys: Record<string, number>) => {
+    if (!sceneRef.current.scene || !THREE) return
+    
+    sceneRef.current.scene.traverse((child: any) => {
+      if (!(child instanceof THREE.Mesh)) return
+      if (!child.morphTargetDictionary || !child.morphTargetInfluences) return
+      
+      Object.entries(keys).forEach(([key, value]) => {
+        const index = child.morphTargetDictionary[key]
+        if (index !== undefined) {
+          child.morphTargetInfluences[index] = value
+        }
+      })
+    })
+    console.log("Shape keys applied:", keys)
+  }
+  
   useEffect(() => {
     const loadThree = async () => {
       try {
@@ -75,6 +105,8 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
     loadThree()
   }, [])
 
+
+
   useEffect(() => {
     if (!canvasRef.current || !THREE) return
 
@@ -86,13 +118,14 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
     else if (userResponses.bodyType === "athletic")
       modelPath = userResponses.gender === "male" ? "/models/male_athletic.glb" : "/models/female_athletic.glb"
 
-<<<<<<< HEAD
-    const { dispose, loadPromise, scene, model } = modelLoader(canvasRef.current, modelPath, 1.0, "bodyRearBtn")
-=======
     const { dispose, loadPromise, scene, model } = modelLoader(canvasRef.current, modelPath, 1.0, uniqueId)
->>>>>>> 9098284 (body data update backend added)
     sceneRef.current.scene = scene
     sceneRef.current.model = model
+    
+    // Store reference to model for rotation
+    if (scene && model) {
+      (scene as any).modelReference = model;
+    }
 
     setIsAnalyzing(true)
     if (loadPromise) loadPromise.finally(() => setIsAnalyzing(false))
@@ -102,6 +135,19 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
           if (!(child instanceof THREE.Mesh)) return
           if (!child.morphTargetDictionary || !child.morphTargetInfluences) return
           const defaults = getAllShapeKeyValues(child)
+          
+          // If shape_keys are provided in userResponses, use them to initialize the model
+          if (userResponses.shape_keys) {
+            Object.entries(userResponses.shape_keys).forEach(([key, value]) => {
+              const index = child.morphTargetDictionary[key]
+              if (index !== undefined) {
+                child.morphTargetInfluences[index] = value
+              }
+            })
+            // Update the defaults with provided shape_keys
+            Object.assign(defaults, userResponses.shape_keys)
+          }
+          
           console.log("Initial shape keys:", defaults)
           // NEW: Store initial shape keys for reset
           initialShapeKeysRef.current = defaults
@@ -109,21 +155,36 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
           const code = generateAlphanumericCode(defaults, "average")
           setAlphaCode(code)
         })
+        
+        // Apply shape keys once model is loaded, similar to shape summary page
+        if (userResponses.shape_keys) {
+          updateModelWithShapeKeys(userResponses.shape_keys)
+        }
       })
     else setTimeout(() => setIsAnalyzing(false), 10000)
 
     return () => dispose?.()
-  }, [isMobile, userResponses.gender, userResponses.bodyType, THREE])
+  }, [isMobile, userResponses.gender, userResponses.bodyType, THREE]) // Remove userResponses.shape_keys from dependencies
 
+  // Update when shapeKeysState changes, similar to shape summary page
+
+  // Effect to update measurements when slider_values change
   useEffect(() => {
-    if (!trimesterEnabled) {
-      setMeasurements((prev) => ({
-        ...prev,
-        Trimester: 0,
-      }))
+    if (userResponses.slider_values) {
+      const currentSliderValues = JSON.stringify(userResponses.slider_values)
+      // Only update if slider values have actually changed
+      if (prevSliderValuesRef.current !== currentSliderValues) {
+        prevSliderValuesRef.current = currentSliderValues
+        const defaults = createDefaultValues(genderConfig)
+        setMeasurements(prev => ({
+          ...defaults,
+          ...userResponses.slider_values
+        }))
+      }
     }
-  }, [trimesterEnabled])
+  }, [userResponses.slider_values, genderConfig])
 
+  // Update model when measurements change
   useEffect(() => {
     if (!sceneRef.current.model || !THREE) return
 
@@ -138,6 +199,34 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
       })
     })
   }, [measurements, userResponses.gender, userResponses.bodyType, THREE])
+
+  // Handle rotation button click
+  const handleRotateView = () => {
+    if (!sceneRef.current.scene || !THREE) {
+      console.log("Model or THREE not available");
+      return;
+    }
+    
+    const scene = sceneRef.current.scene;
+    const model = (scene as any).modelReference || sceneRef.current.model;
+    
+    if (model) {
+      const angles = [0, Math.PI, Math.PI / 2, -Math.PI / 2]; // Front, Back, Right Side, Left Side
+      let currentIndex = angles.indexOf(model.rotation.y);
+      
+      // If current angle is not in our list, start from beginning
+      if (currentIndex === -1) {
+        currentIndex = 0;
+      } else {
+        currentIndex = (currentIndex + 1) % angles.length;
+      }
+      
+      model.rotation.y = angles[currentIndex];
+      console.log("Rotating to angle:", angles[currentIndex]);
+    } else {
+      console.log("Model reference not found");
+    }
+  };
 
   function createDefaultValues(config: GenderConfig): Record<string, number> {
     const defaults: Record<string, number> = {}
@@ -154,11 +243,33 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
     if (!THREE || !sceneRef.current.scene) return
 
     // Reset measurements (either for a specific group or all)
+    // Use API data if available, otherwise use defaults
     setMeasurements((prev) => {
-      const newMeasurements = groupKey
-        ? { ...prev, ...Object.keys(genderConfig[groupKey].measurements).reduce((acc, key) => ({ ...acc, [key]: 0 }), {}) }
-        : createDefaultValues(genderConfig)
-      return newMeasurements
+      // If we have slider_values from the API, use them as the reset values
+      if (userResponses.slider_values) {
+        // If resetting a specific group, only reset that group's values
+        if (groupKey && genderConfig[groupKey as keyof GenderConfig]) {
+          const groupMeasurements = Object.keys(genderConfig[groupKey as keyof GenderConfig].measurements);
+          const resetValues: Record<string, number> = {};
+          groupMeasurements.forEach(key => {
+            // Use API value if available, otherwise use 0
+            resetValues[key] = userResponses.slider_values && userResponses.slider_values[key] !== undefined 
+              ? userResponses.slider_values[key] 
+              : 0;
+          });
+          return { ...prev, ...resetValues };
+        } else {
+          // Reset all to API values
+          const defaults = createDefaultValues(genderConfig);
+          return { ...defaults, ...userResponses.slider_values };
+        }
+      } else {
+        // Fallback to original behavior if no API data
+        const newMeasurements = groupKey && genderConfig[groupKey as keyof GenderConfig]
+          ? { ...prev, ...Object.keys(genderConfig[groupKey as keyof GenderConfig].measurements).reduce((acc, key) => ({ ...acc, [key]: 0 }), {}) }
+          : createDefaultValues(genderConfig)
+        return newMeasurements
+      }
     })
 
     // Reset trimester if applicable
@@ -172,8 +283,8 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
       if (!child.morphTargetDictionary || !child.morphTargetInfluences) return
 
       // Reset all morph targets to 0
-      Object.values(child.morphTargetDictionary).forEach((index: number) => {
-        child.morphTargetInfluences[index] = 0
+      Object.values(child.morphTargetDictionary).forEach((index) => {
+        child.morphTargetInfluences[index as number] = 0
       })
 
       // Reapply initial shape keys
@@ -308,15 +419,101 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
     setAlphaCode(code)
   }
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     const payload = {
       shape: userResponses.bodyType || "average",
-      shape_keys: shapeKeysState,
+      shape_keys: JSON.stringify(shapeKeysState), // Convert object to string
       slider_values: measurements,
       alphanumeric_code: alphaCode,
     }
-    console.log("Final Payload:", payload)
-    onComplete(payload)
+    
+    // Enhanced debugging information
+    console.log("=== HANDLE CONTINUE DEBUG INFO ===")
+    console.log("Shape:", payload.shape)
+    console.log("Alphanumeric Code:", payload.alphanumeric_code)
+    
+    console.log("Shape Keys:", payload.shape_keys)
+    
+    console.log("Slider Values:")
+    Object.entries(payload.slider_values).forEach(([key, value]) => {
+      console.log(`  ${key}: ${value}`)
+    })
+    
+    console.log("Full Payload:", payload)
+    console.log("###################")
+    
+    try {
+      const response = await fetch('/api/body-data', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      
+      // Log response details for debugging
+      console.log("Response status:", response.status);
+      console.log("Response headers:", [...response.headers.entries()]);
+      
+      // Get response text first for debugging
+      const responseText = await response.text();
+      console.log("Raw response text:", responseText);
+      
+      // If response is empty
+      if (!responseText) {
+        if (response.ok) {
+          toast({
+            title: "Success!",
+            description: "Body data updated successfully.",
+          });
+          onComplete(payload);
+        } else {
+          toast({
+            title: "Error",
+            description: `Server error: ${response.status} ${response.statusText}`,
+            variant: "destructive",
+          });
+        }
+        return;
+      }
+      
+      // Try to parse JSON
+      let result;
+      try {
+        result = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error("Error parsing JSON response:", parseError);
+        toast({
+          title: "Error",
+          description: "Invalid response from server. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      console.log("Parsed response:", result);
+      
+      if (response.ok && result.success) {
+        toast({
+          title: "Success!",
+          description: result.message || "Body data updated successfully.",
+        });
+        onComplete(payload);
+      } else {
+        toast({
+          title: "Error",
+          description: result.message || "Failed to update body data.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error updating body data:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update body data. Please try again.",
+        variant: "destructive",
+      });
+    }
   }
 
   if (!THREE) {
@@ -388,7 +585,7 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
                         <TickSlider
                           id={`slider-${mKey}`}
                           label={mKey}
-                          value={measurements[mKey] ?? config.min ?? 0}
+                          value={measurements[mKey] !== undefined ? measurements[mKey] : (config.min ?? 0)}
                           min={config.min ?? 0}
                           max={config.max ?? 1}
                           step={config.step ?? 0.5}
@@ -409,14 +606,12 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
             <div className="grid grid-cols-2 gap-2">
               <Button
                 variant="outline"
-<<<<<<< HEAD
-                id="bodyRearBtn"
-=======
                 id={uniqueId}
->>>>>>> 9098284 (body data update backend added)
                 className="flex-1 h-12 bg-transparent border-red-200 text-red-600 hover:bg-red-50"
+                title="Rotate view"
+                onClick={handleRotateView}
               >
-                <RotateCcw className="w-4 h-4 mr-2" /> Body Rear
+                <ArrowLeftRight className="w-4 h-4 mr-2" /> Body Rear
               </Button>
               <Button
                 onClick={handleContinue}
@@ -436,20 +631,8 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
       {isAnalyzing && <AnalyzingScreen />}
       <div className="flex h-full">
         {/* LEFT PANEL (Controls) */}
-        <div className="w-1/3 bg-white border-r border-gray-200 flex flex-col h-full">
-          <div className="p-3 border-b border-gray-200 bg-gradient-to-r from-red-600 to-red-500 text-white flex-shrink-0">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-lg font-bold">Body Modeler</h1>
-                <p className="text-sm opacity-90">Fine-tune your 3D model</p>
-              </div>
-              <div className="flex space-x-1">
-                <Button size="sm" variant="ghost" className="text-white hover:bg-white/20 h-8 w-8 p-0">
-                  <EyeOff className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
+        <div className="w-1/3 bg-white border-r border-gray-200 flex flex-col ">
+         
 
           <div className="p-3 bg-gray-50 border-b border-gray-200 flex-shrink-0 leading-3">
             <div className="flex items-center justify-between">
@@ -473,7 +656,7 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
 
           <div className="flex-1 min-h-0 flex flex-col">
             <Tabs defaultValue="head" className="h-full flex flex-col leading-3">
-              <TabsList className="grid w-full grid-cols-6 m-3 mb-0 h-12 gap-1 flex-shrink-0">
+              <TabsList className="grid w-full grid-cols-6  mb-1 h-12 gap-1 flex-shrink-0">
                 {Object.entries(genderConfig).map(([key, group]) => (
                   <TabsTrigger
                     key={key}
@@ -536,19 +719,17 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
             </Tabs>
           </div>
 
-          <div className="absolute bottom-0 left-0 w-1/3 border-t border-gray-200 bg-white flex-shrink-0 shadow-lg z-20 p-[45px] px-[5px]">
+          <div className="border-t border-gray-200 bg-white flex-shrink-0 shadow-lg p-3">
             <div className="flex space-x-3">
               <Button
                 variant="outline"
                 size="sm"
                 className="flex-1 h-12 bg-transparent border-red-200 text-red-600 hover:bg-red-50"
-<<<<<<< HEAD
-                id="bodyRearBtn"
-=======
                 id={uniqueId}
->>>>>>> 9098284 (body data update backend added)
+                title="Rotate view"
+                onClick={handleRotateView}
               >
-                <RotateCcw className="w-4 h-4 mr-2" /> Body Rear
+                <ArrowLeftRight className="w-4 h-4 mr-2" /> Body Rear
               </Button>
               <Button
                 onClick={handleContinue}
@@ -562,11 +743,7 @@ export default function BodyViewer({ userResponses, onComplete, onChange }: Body
 
         {/* RIGHT PANEL (Viewer) */}
         <div className="flex-1 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center h-full">
-<<<<<<< HEAD
-          <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-lg w-full mx-4">
-=======
           <div className="bg-white rounded-2xl shadow-2xl p-6 w-full mx-4">
->>>>>>> 9098284 (body data update backend added)
             <div className="text-center mb-4">
               <h2 className="text-xl font-bold text-gray-900 mb-2">Your Body Model</h2>
               <Badge variant="secondary" className="bg-gradient-to-r from-red-100 to-red-100 text-red-600">

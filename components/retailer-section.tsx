@@ -92,6 +92,15 @@ export default function RetailerSection({ isMobile }: RetailerSectionProps) {
                   />
                 </div>
 
+<<<<<<< HEAD
+=======
+                <div className="flex items-center space-x-3 bg-gray-50 p-3 rounded-3xl">
+                  <Checkbox id="mobile-retailer-terms" />
+                  <label htmlFor="mobile-retailer-terms" className="text-gray-700 font-medium text-sm">
+                    I agree that I am above 18 years old
+                  </label>
+                </div>
+>>>>>>> 9098284 (body data update backend added)
 
                 <Button className="w-full bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white py-3 text-base font-semibold rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 border-0">
                   Submit Application
@@ -212,7 +221,11 @@ export default function RetailerSection({ isMobile }: RetailerSectionProps) {
               <div className="flex items-center space-x-3 bg-gray-50 p-3 rounded-xl">
                 <Checkbox id="desktop-retailer-terms" />
                 <label htmlFor="desktop-retailer-terms" className="text-sm text-gray-700 font-medium">
+<<<<<<< HEAD
                   I agree to the Terms and Privacy Policy
+=======
+                  I agree that I am above 18 years old
+>>>>>>> 9098284 (body data update backend added)
                 </label>
               </div>
 

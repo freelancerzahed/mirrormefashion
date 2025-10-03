@@ -1,5 +1,7 @@
-// config.ts
+
 export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://mirrormefashion.com/api/v2"
+
+
 
 export const recaptcha = {
   siteKey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LfzDdErAAAAAOdwh_1bxq9fTckoR7tnabeh6wyu", // client-side fallback

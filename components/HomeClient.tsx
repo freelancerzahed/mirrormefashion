@@ -4,10 +4,15 @@
 import React, { useEffect, useReducer, useRef, useMemo } from "react";
 import Navigation from "@/components/navigation";
 import MobileHeroSection from "@/components/mobile-hero-section";
+<<<<<<< HEAD
 import MobileFeaturesSection from "@/components/mobile-features-section";
 import MobileBottomNav from "@/components/mobile-bottom-nav";
 import CustomHorizontalScrollbar from "@/components/custom-horizontal-scrollbar";
 import BetaSection from "@/components/beta-section";
+=======
+import MobileBottomNav from "@/components/mobile-bottom-nav";
+import CustomHorizontalScrollbar from "@/components/custom-horizontal-scrollbar";
+>>>>>>> 9098284 (body data update backend added)
 import HeroSection from "@/components/hero-section";
 import HowItWorksSection from "@/components/how-it-works-section";
 import ProfessionalSection from "@/components/professional-section";
@@ -26,7 +31,10 @@ type State = {
   currentSection: string;
   isMobile: boolean;
   userType: string;
+<<<<<<< HEAD
   agreed: boolean;
+=======
+>>>>>>> 9098284 (body data update backend added)
   userResponses: any | null;
   showBodyModeler: boolean;
   showRegistration: boolean;
@@ -36,7 +44,10 @@ type Action =
   | { type: "setCurrentSection"; payload: string }
   | { type: "setIsMobile"; payload: boolean }
   | { type: "setUserType"; payload: string }
+<<<<<<< HEAD
   | { type: "setAgreed"; payload: boolean }
+=======
+>>>>>>> 9098284 (body data update backend added)
   | { type: "setUserResponses"; payload: any | null }
   | { type: "setShowBodyModeler"; payload: boolean }
   | { type: "setShowRegistration"; payload: boolean }
@@ -46,7 +57,10 @@ const initialState: State = {
   currentSection: "hero",
   isMobile: false,
   userType: "",
+<<<<<<< HEAD
   agreed: false,
+=======
+>>>>>>> 9098284 (body data update backend added)
   userResponses: null,
   showBodyModeler: false,
   showRegistration: false,
@@ -60,8 +74,11 @@ function reducer(state: State, action: Action): State {
       return { ...state, isMobile: action.payload };
     case "setUserType":
       return { ...state, userType: action.payload };
+<<<<<<< HEAD
     case "setAgreed":
       return { ...state, agreed: action.payload };
+=======
+>>>>>>> 9098284 (body data update backend added)
     case "setUserResponses":
       return { ...state, userResponses: action.payload };
     case "setShowBodyModeler":
@@ -88,7 +105,10 @@ export default function HomeClient({ products }: Props) {
   const setIsMobile = (value: boolean) =>
     dispatch({ type: "setIsMobile", payload: value });
   const setUserType = (t: string) => dispatch({ type: "setUserType", payload: t });
+<<<<<<< HEAD
   const setAgreed = (v: boolean) => dispatch({ type: "setAgreed", payload: v });
+=======
+>>>>>>> 9098284 (body data update backend added)
 
   // Keep the same names and behaviors as your original code (handlers unchanged).
   useEffect(() => {
@@ -216,10 +236,13 @@ export default function HomeClient({ products }: Props) {
       alert("Please select a user type");
       return;
     }
+<<<<<<< HEAD
     if (!state.agreed) {
       alert("Please agree that you are above 18 years old");
       return;
     }
+=======
+>>>>>>> 9098284 (body data update backend added)
 
     switch (state.userType) {
       case "stylist":
@@ -247,7 +270,11 @@ export default function HomeClient({ products }: Props) {
     dispatch({ type: "setUserResponses", payload: responses });
     dispatch({ type: "setShowBodyModeler", payload: true });
     setCurrentSection("bodyModeler");
+<<<<<<< HEAD
     setTimeout(() => scrollToSection("bodyModelerSection"), 150000);
+=======
+    setTimeout(() => scrollToSection("bodyModelerSection"), 500);
+>>>>>>> 9098284 (body data update backend added)
   };
 
   const handleChatbotReset = () => {
@@ -343,8 +370,11 @@ const handleRegistrationSubmit = async (formData: any) => {
                   currentSection={state.currentSection}
                   userType={state.userType}
                   setUserType={setUserType}
+<<<<<<< HEAD
                   agreed={state.agreed}
                   setAgreed={setAgreed}
+=======
+>>>>>>> 9098284 (body data update backend added)
                   handleUserTypeSelection={handleUserTypeSelection}
                 />
               )}
@@ -399,8 +429,11 @@ const handleRegistrationSubmit = async (formData: any) => {
                   currentSection={state.currentSection}
                   userType={state.userType}
                   setUserType={setUserType}
+<<<<<<< HEAD
                   agreed={state.agreed}
                   setAgreed={setAgreed}
+=======
+>>>>>>> 9098284 (body data update backend added)
                   handleUserTypeSelection={handleUserTypeSelection}
                 />
               )}

@@ -3,7 +3,10 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+<<<<<<< HEAD
 import { Checkbox } from "@/components/ui/checkbox"
+=======
+>>>>>>> 9098284 (body data update backend added)
 import { ArrowRight, Rocket, Zap, TrendingUp, Award, Users } from "lucide-react"
 
 interface ProfessionalSectionProps {
@@ -11,8 +14,11 @@ interface ProfessionalSectionProps {
   currentSection: string
   userType: string
   setUserType: (value: string) => void
+<<<<<<< HEAD
   agreed: boolean
   setAgreed: (value: boolean) => void
+=======
+>>>>>>> 9098284 (body data update backend added)
   handleUserTypeSelection: () => void
 }
 
@@ -21,8 +27,11 @@ export default function ProfessionalSection({
   currentSection,
   userType,
   setUserType,
+<<<<<<< HEAD
   agreed,
   setAgreed,
+=======
+>>>>>>> 9098284 (body data update backend added)
   handleUserTypeSelection,
 }: ProfessionalSectionProps) {
   if (isMobile) {
@@ -93,6 +102,7 @@ export default function ProfessionalSection({
                   </SelectContent>
                 </Select>
 
+<<<<<<< HEAD
                 <div className="flex items-center space-x-3 bg-gray-50 p-4 rounded-3xl">
                   <Checkbox id="agree" checked={agreed} onCheckedChange={(checked) => setAgreed(checked)} />
                   <label htmlFor="agree" className="text-gray-700 font-medium text-sm">
@@ -100,6 +110,8 @@ export default function ProfessionalSection({
                   </label>
                 </div>
 
+=======
+>>>>>>> 9098284 (body data update backend added)
                 <Button
                   onClick={handleUserTypeSelection}
                   className="w-full h-12 text-base font-semibold rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white border-0"
@@ -179,6 +191,7 @@ export default function ProfessionalSection({
                 </SelectContent>
               </Select>
 
+<<<<<<< HEAD
               <div className="flex items-center space-x-3 bg-gray-50 p-3 rounded-xl">
                 <Checkbox id="agree" checked={agreed} onCheckedChange={(checked) => setAgreed(checked)} />
                 <label htmlFor="agree" className="text-gray-700 font-medium text-sm">
@@ -186,6 +199,8 @@ export default function ProfessionalSection({
                 </label>
               </div>
 
+=======
+>>>>>>> 9098284 (body data update backend added)
               <Button
                 onClick={handleUserTypeSelection}
                 className="w-full h-12 text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white"

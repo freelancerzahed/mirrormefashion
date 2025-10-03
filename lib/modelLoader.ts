@@ -138,6 +138,7 @@ export function modelLoader(
             scene.add(model);
           }
 
+<<<<<<< HEAD
           const rotationBtn = document.getElementById(rotationButtonId);
           if (rotationBtn) {
             const angles = [0, -Math.PI / 2, Math.PI];
@@ -149,6 +150,13 @@ export function modelLoader(
               }
             });
           }
+=======
+          // Store model reference for rotation
+          (scene as any).modelReference = model;
+          console.log("Model reference stored in scene");
+          
+
+>>>>>>> 9098284 (body data update backend added)
 
           if (model) {
             resolve(model);
@@ -195,5 +203,12 @@ export function modelLoader(
     scene.clear();
   };
 
+<<<<<<< HEAD
+=======
+  // Store renderer in scene for access in rotation function
+  (scene as any).renderer = renderer;
+  (scene as any).camera = camera;
+  
+>>>>>>> 9098284 (body data update backend added)
   return { scene, model, renderer, loadPromise, dispose };
 }

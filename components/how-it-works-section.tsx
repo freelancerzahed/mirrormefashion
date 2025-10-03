@@ -26,6 +26,66 @@ export default function HowItWorksSection({ onSectionChange, scrollToSection }: 
       />
       {/* Dark overlay for text contrast */}
        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-primary-900/60 to-primary-800/80"></div>
+<<<<<<< HEAD
+=======
+      
+      {/* Custom Animations */}
+      <style>
+        {`
+          @keyframes buttonPulse {
+            0% { 
+              box-shadow: 0 0 25px rgba(220, 38, 38, 0.7);
+              transform: translateY(0);
+            }
+            25% {
+              transform: translateY(-5px);
+            }
+            50% { 
+              box-shadow: 0 0 40px rgba(220, 38, 38, 0.9);
+              transform: translateY(0);
+            }
+            75% {
+              transform: translateY(-5px);
+            }
+            100% { 
+              box-shadow: 0 0 25px rgba(220, 38, 38, 0.7);
+              transform: translateY(0);
+            }
+          }
+          
+          @keyframes buttonPulsePurple {
+            0% { 
+              box-shadow: 0 0 25px rgba(139, 92, 246, 0.7);
+              transform: translateY(0);
+            }
+            25% {
+              transform: translateY(-5px);
+            }
+            50% { 
+              box-shadow: 0 0 40px rgba(139, 92, 246, 0.9);
+              transform: translateY(0);
+            }
+            75% {
+              transform: translateY(-5px);
+            }
+            100% { 
+              box-shadow: 0 0 25px rgba(139, 92, 246, 0.7);
+              transform: translateY(0);
+            }
+          }
+          
+          .animate-button-pulse {
+            animation: buttonPulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+          }
+          
+          .animate-button-pulse-purple {
+            animation: buttonPulsePurple 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+          }
+        `}
+      </style>
+      
+
+>>>>>>> 9098284 (body data update backend added)
       {/* Main Content */}
       <div className="relative z-10 w-full max-w-7xl px-4 sm:px-6 py-8 sm:py-12 lg:py-16">
         <div className="text-center mb-8">
@@ -118,7 +178,11 @@ export default function HowItWorksSection({ onSectionChange, scrollToSection }: 
         <div className="text-center flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 px-4">
           <Button
             size="lg"
+<<<<<<< HEAD
             className="w-full sm:w-80 px-6 py-3 text-base sm:text-lg font-bold rounded-full shadow-2xl transition-all duration-300 group bg-red-500 hover:bg-red-600 text-white relative overflow-hidden"
+=======
+            className="w-full sm:w-80 px-6 py-3 text-base sm:text-lg font-bold rounded-full shadow-2xl transition-all duration-300 group text-white relative overflow-hidden bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 animate-button-pulse"
+>>>>>>> 9098284 (body data update backend added)
             onClick={() => {
               onSectionChange("chat")
               setTimeout(() => scrollToSection("sopiaChatSection"), 500)
@@ -129,7 +193,11 @@ export default function HowItWorksSection({ onSectionChange, scrollToSection }: 
           </Button>
           <Button
             size="lg"
+<<<<<<< HEAD
             className="w-full sm:w-80 px-6 py-3 text-base sm:text-lg font-bold rounded-full shadow-2xl transition-all duration-300 group bg-purple-500 hover:bg-purple-600 text-white relative overflow-hidden"
+=======
+            className="w-full sm:w-80 px-6 py-3 text-base sm:text-lg font-bold rounded-full shadow-2xl transition-all duration-300 group text-white relative overflow-hidden bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 animate-button-pulse-purple"
+>>>>>>> 9098284 (body data update backend added)
             onClick={() => {
               onSectionChange("professional")
               setTimeout(() => scrollToSection("professionalSection"), 500)
